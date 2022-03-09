@@ -1,0 +1,229 @@
+organizar o redux inteiro todo mundo junto
+
+10 DICAS PARA TRABALHAR EM EQUIPE:
+Tempo de qualidade para ler o README juntos;
+Entender a estrutura do projeto;
+Organizar a comunicação no slack através de threads;
+Combinar horários de disponibilidade na semana;
+Combinar momentos de pausa;
+Organização do trello;
+Definir metas e comemorar quando forem atingidas;
+Transparência com relação a impedimentos;
+Combinar boas práticas de código(nomes de commits e branchs);
+PEÇA AJUDA!!!
+
+
+Primeiro, é necessário fazer um GET request para:
+
+https://opentdb.com/api_token.php?command=request
+
+
+Esse endpoint te retornará o token que vai ser utilizado nas requisições seguintes. A resposta dele será:
+{
+   "response_code":0,
+   "response_message":"Token Generated Successfully!",
+   "token":"f00cb469ce38726ee00a7c6836761b0a4fb808181a125dcde6d50a9f3c9127b6"
+}
+
+Para pegar as perguntas, você deve realizar um GET request para o seguinte endpoint:
+https://opentdb.com/api.php?amount=${quantidade-de-perguntas-retornadas}&token=${seu-token-aqui}
+
+Recomendação
+https://opentdb.com/api.php?amount=5&token=${seu-token-aqui}
+
+Pergunta de múltipla escolha
+{
+   "response_code":0,
+   "results":[
+      {
+         "category":"Entertainment: Video Games",
+         "type":"multiple",
+         "difficulty":"easy",
+         "question":"What is the first weapon you acquire in Half-Life?",
+         "correct_answer":"A crowbar",
+         "incorrect_answers":[
+            "A pistol",
+            "The H.E.V suit",
+            "Your fists"
+         ]
+      }
+   ]
+}
+
+Pergunta de verdadeiro ou falso
+{
+   "response_code":0,
+   "results":[
+      {
+         "category":"Entertainment: Video Games",
+         "type":"boolean",
+         "difficulty":"hard",
+         "question":"TF2: Sentry rocket damage falloff is calculated based on the distance between the sentry and the enemy, not the engineer and the enemy",
+         "correct_answer":"False",
+         "incorrect_answers":[
+            "True"
+         ]
+      }
+   ]
+}
+
+
+O token expira em 6 horas e te retornará um response_code: 3 caso esteja expirado. Atenção para que seu código contemple isso! Caso o token seja inválido, essa será a resposta da API:
+
+{
+   "response_code":3,
+   "results":[]
+}
+
+Garantida a instalação do CryptoJS no projeto, importe o MD5: import md5 from 'crypto-js/md5';
+Converta o email do usuário: md5(emailDoUsuário).toString();
+
+Formato de URL necessário:
+https://www.gravatar.com/avatar/${hash-gerada}
+
+Exemplo de URL com hash de uma pessoa
+https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50
+
+Exemplo de imagem exibida com a URL
+ <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" />
+
+
+STORE NO REDUX:
+
+if (window.Cypress) {
+  window.store = store;
+}
+
+
+A chave player deve conter a seguinte estrutura:
+{
+  name: nome-da-pessoa,
+  assertions: número-de-acertos,
+  score: pontuação,
+  gravatarEmail: email-da-pessoa,
+}
+
+A chave token deve conter o valor do token recebido na API do Trivia.
+
+LOCAL STORAGE para salvar o ranking
+[
+  { name: nome-da-pessoa, score: 10, picture: url-da-foto-no-gravatar }
+]
+
+o que cada requisito precisa dos anteriores? estado local? estado global? o que o requisito retorna?
+
+
+1. Crie a tela de login, onde a pessoa que joga deve preencher as informações para iniciar um jogo
+nome e email no estado local do componente;
+após habilitar e clicar no botão play uma action para mandar o nome e email para o estado do redux;
+
+2. Crie o botão de iniciar o jogo
+botão de iniciar o jogo, pode ser um componente e definimos o nome do componente em grupo
+requisição do token na componentDidMount, 
+o token quando está válido volta code 0, quando está expirado volta code 3.
+A requisição pode ser feita a cada 6 horas, pode ser feita quando cria um novo usuário;
+flag isPlaying = true ? no estado local iniciaria com false;
+Trybetunes forneceu um aquivo com a consulta da api
+Localstorage para salvar o token => não tem padrão definido
+// <StartGameBtn />
+
+3. Crie um botão que leva a pessoa para tela de configuração
+botão de configurações, também pode ser um componente com nome definido em grupo;
+tela de configurações também pode ser um componente com nome definido em grupo;
+history.push
+// <ConfigBtn />
+
+TELA DO jogo;
+4. Crie um header que deve conter as informações da pessoa jogadora;
+precisa: imagem do gravatar, nome e placar do localstorage;
+Trybetunes forneceu um aquivo com a consulta da api
+Deixar o componente do gravatar como "bobo" antes de implementar a api
+// <Header />
+
+5. Crie a página de jogo que deve conter as informações relacionadas à pergunta;
+LER O TESTE DA 6 ANTES DE FAZER A 5
+requisição a api para pegar as perguntas, categoria e alternativas(componentDidMount);
+verificação se o token é válido, caso não seja, novo fetch de token
+
+Respostas podem ser true ou false ou com 4 respostas sendo uma certa e 3 erradas;
+
+Respostas devem ser colocadas na tela de forma aleatória, usar um Math.random para gerar um array com números de 1 a 4 ? projeto pixel arts usamos algo parecido.
+   
+
+utilizar <Button /> para as repostas
+
+6. Desenvolva o jogo onde só deve ser possível escolher uma resposta correta por pergunta;
+condicional para verificar 
+avaliar se vamos usar radio, se só pode clicar em uma resposta.
+
+LER OS TESTES ANTES DE DESENVOLVER
+
+
+7. Desenvolva o estilo que, ao clicar em uma resposta, a correta deve ficar verde e as incorretas, vermelhas
+ver o css do requisito
+
+8. Desenvolva um timer onde a pessoa que joga tem 30 segundos para responder
+ver o timer na aua Trybem Star, (ciclo de vida de componentes ?)
+timer tem flag ? no final dele daria para setar uma flag ?
+componentWillMount => verificar como usar para a flag.
+quando acabar os 30 segundos? deixa na página com os botões desabilitados e somente o da próxima tela habilitado ou a melhor opção definida passa para a próxima tela e ver se passa no teste
+
+9. Crie o placar com as seguintes características:
+capturar no momento do clique o tempo restante para o cácluclo.
+quando clica congela o timer
+além de calcular a pontuação, precisamos de uma chave no localStorage que salva a quantidade de respostas corretas e outra chave que salva um array com todas as "jogadas" com nome, placar e repostas corretas.
+as informações da rodada não podem ser sobrescritas, as informações da quantidade de respostas corretas deve ser 0 no início da rodada.
+
+10. Crie um botão de "Next" que apareça após a resposta ser dada
+botão deve estar oculto antes da reposta ou do tempo acabar
+verificar se o botão tem uma propriedade hidden OU
+renderizar a partir de uma flag no estado global que deve iniciar false e mudar para true quando o tempo acaba ou a pessoa responde.
+
+11. Desenvolva o jogo de forma que a pessoa que joga deve responder 5 perguntas no total
+quando chegar na 5a pergunta mudar o comportamento do botão para enviar a tela de feedback
+quando responde zera o timer na próxima pergunta
+na ultima pergunta o botão "Próxima" deve direcionar para a tela de feedback 
+na consulta da API retornar 5 perguntas
+boolean ou multiple
+
+
+Tela de feedback
+12. Desenvolva o header de feedback que deve conter as informações da pessoa jogadora
+// <HeaderFeedback />
+Verificar no figma se é outro header diferente do restante da aplicação ou se é o mesmo header.
+este header deve conter a imagem, nome e placar.
+
+13. Crie a mensagem de feedback para ser exibida a pessoa usuária
+capturar do estado a quantidade de respostas corretas feitas no req 9 e renderizar conforme requisito.
+
+
+14. Exiba as informações relacionadas aos resultados obtidos para a pessoa usuária
+placar no localStorage e informações de cada rodada no localstorage.
+as informações de cada rodada não podem ser substituídas, devem ser inseridas novas informações a cada rodada.
+
+
+15. Crie a opção para a pessoa jogadora poder jogar novamente
+Neste botão play again devemos setar a quantidade de respostas corretas para 0 no localStorage e o placar deve ser zerado também.
+
+16. Crie a opção para a pessoa jogadora poder visualizar a tela de ranking
+em que momento renderiza o botão do ranking? => ver no figma 
+renderizar após reponsder a 5a pergunta
+
+   
+Tela de ranking
+17. Crie um botão para ir ao início;
+tela inicial sem dados preenchidos
+
+18. Crie o conteúdo da tela de ranking;
+renderização do localStorage das pessoas que já jogaram
+ranking ordenando pela pontuação
+[
+   {name:"Leticia", gravatar:"url", placar:0}
+   {name:"Pamela", gravatar:"url", placar:0}
+   {name:"Leticia", gravatar:"url", placar:0}
+   {name:"Pamela", gravatar:"url", placar:0}
+   {name:"Leticia", gravatar:"url", placar:0}
+   {name:"Pamela", gravatar:"url", placar:0}
+]
+como fazer o sort de objeto?
+Verificar qual Hof para a renderização
