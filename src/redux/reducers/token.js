@@ -5,7 +5,7 @@ const initialState = '';
 function tokenReducer(state = initialState, action) {
   switch (action.type) {
   case FETCH_TOKEN_SUCCESS:
-    return action.token.token;
+    return action.payload.token;
 
   case FETCH_TOKEN_FAILURE:
     return {
