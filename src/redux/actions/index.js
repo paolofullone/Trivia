@@ -1,9 +1,7 @@
 import getToken from '../../services/TriviaApi';
+import getQuestions from '../../services/GetQuestions';
 
 export const LOGIN = 'LOGIN';
-
-export const BOOLEAN_QUESTION = 'BOOLEAN_QUESTION';
-export const MULTIPLE_QUESTION = 'MULTIPLE_QUESTION';
 
 export const FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCESS';
 export const FETCH_QUESTIONS_SUCCESS = 'FETCH_QUESTIONS_SUCESS';
@@ -18,14 +16,14 @@ export const loginAction = (payload) => ({
   payload,
 });
 
-export const booleanQuestionAction = (payload) => ({
-  BOOLEAN_QUESTION,
+export const QuestionSuccessAction = (payload) => ({
+  FETCH_QUESTIONS_SUCCESS,
   payload,
 });
 
-export const multipleQuestionAction = (payload) => ({
-  MULTIPLE_QUESTION,
-  payload,
+export const QuestionFailureAction = (error) => ({
+  FETCH_QUESTIONS_FAILURE,
+  error,
 });
 
 export function fetchTokenSuccessAction(payload) {
@@ -47,4 +45,11 @@ export const fetchTokenThunk = () => (dispatch) => getToken()
     dispatch(fetchTokenSuccessAction(response));
   }).catch((error) => {
     dispatch(fetchTokenFailureAction(error));
+  });
+
+export const fetchQuestionThunk = () => (dispatch) => getQuestions()
+  .then((response) => {
+    dispatch(QuestionSuccessAction(response));
+  }).catch((error) => {
+    dispatch(QuestionFailureAction(error));
   });

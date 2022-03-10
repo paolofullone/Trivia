@@ -31,7 +31,9 @@ state={
     const { history, fetchToken, userInfo } = this.props;
     console.log(history);
     fetchToken();
+    console.log(fetchToken());
     userInfo(this.state);
+    // setItem
     history.push('/game');
   }
 
