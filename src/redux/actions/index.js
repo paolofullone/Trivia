@@ -28,10 +28,10 @@ export const multipleQuestionAction = (payload) => ({
   payload,
 });
 
-export function fetchTokenSuccessAction(token) {
+export function fetchTokenSuccessAction(payload) {
   return {
     type: FETCH_TOKEN_SUCCESS,
-    token,
+    payload,
   };
 }
 
