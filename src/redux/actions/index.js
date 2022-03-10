@@ -1,3 +1,5 @@
+import getToken from '../../services/TriviaApi';
+
 export const LOGIN = 'LOGIN';
 
 export const BOOLEAN_QUESTION = 'BOOLEAN_QUESTION';
@@ -25,3 +27,24 @@ export const multipleQuestionAction = (payload) => ({
   MULTIPLE_QUESTION,
   payload,
 });
+
+export function fetchTokenSuccessAction(token) {
+  return {
+    type: FETCH_TOKEN_SUCCESS,
+    token,
+  };
+}
+
+export function fetchTokenFailureAction(error) {
+  return {
+    type: FETCH_TOKEN_FAILURE,
+    error,
+  };
+}
+
+export const fetchTokenThunk = () => (dispatch) => getToken()
+  .then((response) => {
+    dispatch(fetchTokenSuccessAction(response));
+  }).catch((error) => {
+    dispatch(fetchTokenFailureAction(error));
+  });
