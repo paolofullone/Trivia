@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-export default class Questions extends Component {
+class Game extends Component {
   render() {
+    // console.log(this.props);
     return (
       <div>Game</div>
     );
   }
 }
+
+export default connect()(Game);

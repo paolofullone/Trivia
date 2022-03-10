@@ -33,6 +33,12 @@ state={
     history.push('/game');
   }
 
+  handleClickConfig= () => {
+    const { history } = this.props;
+    // console.log(this.props);
+    history.push('/config');
+  }
+
   render() {
     const { name, gravatarEmail, disableBtn } = this.state;
     return (
@@ -66,6 +72,13 @@ state={
           disabled={ disableBtn }
         >
           Play
+        </button>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.handleClickConfig }
+        >
+          Configurações
         </button>
       </form>
     );
