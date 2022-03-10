@@ -63,14 +63,14 @@ body {
 }
 
 form {
-  width: 20vw;
   margin-top: 10rem;
+  width: 20vw;
 
 }
 
 button {
-  width: 10rem;
   margin-top: 1rem;
+  width: 10rem;
 }
 
 label {
