@@ -1,17 +1,17 @@
 import { FETCH_TOKEN_SUCCESS, FETCH_TOKEN_FAILURE } from '../actions';
 
-const initialState = {
-  response_code: 0,
-  response_message: '',
-  token: '',
-};
+const initialState = '';
 
 function tokenReducer(state = initialState, action) {
   switch (action.type) {
   case FETCH_TOKEN_SUCCESS:
-    return state;
+    return action.token.token;
+
   case FETCH_TOKEN_FAILURE:
-    return state;
+    return {
+      ...state,
+      error: action.error,
+    };
   default:
     return state;
   }
