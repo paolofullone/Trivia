@@ -33,6 +33,12 @@ state={
     history.push('/game');
   }
 
+  handleClickConfig= () => {
+    const { history } = this.props;
+    // console.log(this.props);
+    history.push('/config');
+  }
+
   render() {
     const { name, gravatarEmail, disableBtn } = this.state;
     return (
@@ -49,7 +55,7 @@ state={
           />
         </label>
         <label htmlFor="gravatarEmail">
-          email:
+          Email:
           <input
             type="email"
             onChange={ this.handleChange }
@@ -59,14 +65,23 @@ state={
             value={ gravatarEmail }
           />
         </label>
-        <button
-          type="button"
-          onClick={ this.handleClick }
-          data-testid="btn-play"
-          disabled={ disableBtn }
-        >
-          Play
-        </button>
+        <div className="login-btn">
+          <button
+            type="button"
+            onClick={ this.handleClick }
+            data-testid="btn-play"
+            disabled={ disableBtn }
+          >
+            Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.handleClickConfig }
+          >
+            Configurações
+          </button>
+        </div>
       </form>
     );
   }

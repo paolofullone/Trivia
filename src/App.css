@@ -1,3 +1,9 @@
+body {
+  display: flex;
+  justify-content: center;
+  width: 95%;
+}
+
 .App {
   text-align: center;
 }
@@ -54,4 +60,25 @@
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+
+form {
+  margin-top: 10rem;
+  width: 20vw;
+
+}
+
+button {
+  margin-top: 1rem;
+  width: 10rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+
+.login-btn {
+  text-align: center;
 }
