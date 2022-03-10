@@ -74,6 +74,7 @@ state={
 
 Login.propTypes = {
   // dispatch: PropTypes.func.isRequired,
+  fetchToken: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
