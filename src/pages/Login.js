@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchTokenThunk } from '../redux/actions';
+import { fetchTokenThunk, loginAction } from '../redux/actions';
 
 class Login extends Component {
 state={
   name: '',
+  score: 0,
   gravatarEmail: '',
   disableBtn: true,
 }
@@ -27,9 +28,10 @@ state={
   }
 
   handleClick = () => {
-    const { history, fetchToken } = this.props;
+    const { history, fetchToken, userInfo } = this.props;
     console.log(history);
     fetchToken();
+    userInfo(this.state);
     history.push('/game');
   }
 
@@ -90,6 +92,7 @@ state={
 Login.propTypes = {
   // dispatch: PropTypes.func.isRequired,
   fetchToken: PropTypes.func.isRequired,
+  userInfo: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -97,6 +100,7 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchToken: () => dispatch(fetchTokenThunk()),
+  userInfo: (user) => dispatch(loginAction(user)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
