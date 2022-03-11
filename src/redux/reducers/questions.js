@@ -1,25 +1,21 @@
-import {
-  FETCH_QUESTIONS_SUCCESS,
-  FETCH_QUESTIONS_FAILURE,
-  BOOLEAN_QUESTION,
-  MULTIPLE_QUESTION,
-} from '../actions';
+// import {
+//   FETCH_QUESTIONS_SUCCESS,
+// } from '../actions';
 
-const initialState = {};
+// const initialState = {
+//   questions: '',
+// };
 
-function questionsReducer(state = initialState, { type, payload }) {
-  switch (type) {
-  case MULTIPLE_QUESTION:
-    return payload;
-  case BOOLEAN_QUESTION:
-    return payload;
-  case FETCH_QUESTIONS_SUCCESS:
-    return payload;
-  case FETCH_QUESTIONS_FAILURE:
-    return payload;
-  default:
-    return state;
-  }
-}
+// function questionsReducer(state = initialState, action) {
+//   switch (action.type) {
+//   case FETCH_QUESTIONS_SUCCESS:
+//     return {
+//       ...state,
+//       questions: action.payload.results,
+//     };
+//   default:
+//     return state;
+//   }
+// }
 
-export default questionsReducer;
+// export default questionsReducer;

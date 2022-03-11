@@ -10,7 +10,11 @@ const initialState = {
 function playerReducer(state = initialState, action) {
   switch (action.type) {
   case LOGIN:
-    return action.payload;
+    return {
+      ...state,
+      name: action.userName,
+      gravatarEmail: action.userEmail,
+    };
   default:
     return state;
   }
