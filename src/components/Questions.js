@@ -14,8 +14,15 @@ class Questions extends Component {
     const { token } = this.props;
     const results = await getQuestions(token);
     console.log('results no did Mount: ', results);
-    if (results.length) this.setState({ questions: results });
-    else this.getQuestionsAgain();
+    if (results.length) {
+      console.log('entrou no if');
+      this.setState({
+        questions: results,
+      });
+    } else {
+      console.log('entrou no else');
+      this.getQuestionsAgain();
+    }
   }
 
   getQuestionsAgain = async () => {
@@ -28,11 +35,13 @@ class Questions extends Component {
   handleClick = () => {
     const { questionIndex } = this.state;
     const QUESTIONS = 4;
-    if (questionIndex <= QUESTIONS) {
+    if (questionIndex < QUESTIONS) {
       // fazer a lógica da próxima pergunta
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
+      const { history } = this.props;
       console.log('está na última pergunta');
+      history.push('/feedback');
     }
   }
 
@@ -51,8 +60,7 @@ class Questions extends Component {
   // return 4 (<button></button>)
 
   // onde chamar a renderQuestion a primeira vez?
-  renderBtns = () => {
-    const { questions, questionIndex } = this.state;
+  renderBtns = (questions, questionIndex) => {
     const {
       correct_answer: correctAnswer,
       incorrect_answers: incorrectAnswers,
@@ -69,12 +77,13 @@ class Questions extends Component {
       <button
         type="button"
         data-testid={ `wrong-answer-${index}` }
-        key={ Math.random() }
+        key={Math.random()}
+        onClick={ this.verifyAnswer }
       >
         {answer}
       </button>
     ));
-    this.shuffleBtns(btnCorrect, btnsIncorrect);
+    return this.shuffleBtns(btnCorrect, btnsIncorrect);
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
@@ -91,18 +100,20 @@ class Questions extends Component {
   render() {
     console.log('passou no render');
     const { questions, questionIndex } = this.state;
+    console.log('Questões: ', questions, questionIndex);
+    if (!questions.length) return <p>loading</p>;
+    const { category, question } = questions[questionIndex];
     return (
       <div>
         Game
         <div>
-          {questions.length && questions[questionIndex].map(({ category, question }) => (
-            <section key={ Math.random() }>
-              <p data-testid="question-text" key={ Math.random() }>{question}</p>
-              <p data-testid="question-category" key={ Math.random() }>{category}</p>
-            </section>
-          ))}
-          <div>
-            {this.renderBtns}
+          <section>
+            <p data-testid="question-text" key={ Math.random() }>{question}</p>
+            <p data-testid="question-category" key={ Math.random() }>{category}</p>
+          </section>
+
+          <div data-testid="answer-options">
+            {this.renderBtns(questions, questionIndex)}
           </div>
           <button type="button" onClick={ this.handleClick }>
             Próxima
