@@ -1,5 +1,5 @@
 import getToken from '../../services/TriviaApi';
-import getQuestions from '../../services/GetQuestions';
+// import getQuestions from '../../services/GetQuestions';
 
 export const LOGIN = 'LOGIN';
 
@@ -11,20 +11,25 @@ export const FETCH_TOKEN_FAILURE = 'FETCH_TOKEN_FAILURE';
 export const FETCH_QUESTIONS_FAILURE = 'FETCH_QUESTIONS_FAILURE';
 export const FETCH_GRAVATAR_FAILURE = 'FETCH_GRAVATAR_FAILURE';
 
-export const loginAction = (payload) => ({
+export const loginAction = (userName, userEmail) => ({
   type: LOGIN,
-  payload,
+  userName,
+  userEmail,
 });
 
-export const QuestionSuccessAction = (payload) => ({
-  FETCH_QUESTIONS_SUCCESS,
-  payload,
-});
+export function QuestionSuccessAction(payload) {
+  return {
+    type: FETCH_QUESTIONS_SUCCESS,
+    payload,
+  };
+}
 
-export const QuestionFailureAction = (error) => ({
-  FETCH_QUESTIONS_FAILURE,
-  error,
-});
+export function QuestionFailureAction(error) {
+  return {
+    type: FETCH_QUESTIONS_FAILURE,
+    error,
+  };
+}
 
 export function fetchTokenSuccessAction(payload) {
   return {
@@ -47,9 +52,22 @@ export const fetchTokenThunk = () => (dispatch) => getToken()
     dispatch(fetchTokenFailureAction(error));
   });
 
+const TRIVIA_QUESTIONS_BASE_API = 'https://opentdb.com/api.php?amount=5&token=';
+const token = JSON.parse(localStorage.getItem('token'));
+
+const getQuestions = async () => {
+  const response = await fetch(`${TRIVIA_QUESTIONS_BASE_API}${token}`);
+  const json = await response.json();
+  localStorage.setItem('questions', JSON.stringify(json));
+
+  return response.ok ? Promise.resolve(json) : Promise.reject(json);
+};
+
 export const fetchQuestionThunk = () => (dispatch) => getQuestions()
   .then((response) => {
     dispatch(QuestionSuccessAction(response));
   }).catch((error) => {
     dispatch(QuestionFailureAction(error));
   });
+
+export default getQuestions;

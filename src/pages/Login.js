@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import md5 from 'crypto-js/md5';
 import { fetchTokenThunk, loginAction } from '../redux/actions';
 
 class Login extends Component {
 state={
-  name: '',
-  score: 0,
-  gravatarEmail: '',
+  userName: '',
+  userEmail: '',
   disableBtn: true,
 }
 
@@ -17,45 +17,52 @@ state={
   }
 
   enableBtn = () => {
-    const { name, gravatarEmail } = this.state;
-    const emailRegex = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(gravatarEmail);
+    const { userName, userEmail } = this.state;
+    const emailRegex = (/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(userEmail);
     const MIN_LENGTH = 1;
 
-    if (emailRegex && name.length >= MIN_LENGTH) {
+    if (emailRegex && userName.length >= MIN_LENGTH) {
       return this.setState({ disableBtn: false });
     }
     return this.setState({ disableBtn: true });
   }
 
-  handleClick = () => {
-    const { history, fetchToken, userInfo } = this.props;
-    console.log(history);
-    fetchToken();
-    console.log(fetchToken());
-    userInfo(this.state);
-    // setItem
+  handleSubmit = async () => {
+    const { history, userInfo, fetchToken } = this.props;
+    const { userName, userEmail } = this.state;
+    console.log(userName);
+    this.setLocalStorageUser(userName, userEmail);
+    await fetchToken();
+    userInfo(userName, userEmail);
     history.push('/game');
+  }
+
+  setLocalStorageUser = (userName, userEmail) => {
+    const userMd5 = md5(userEmail).toString();
+    const image = `https://www.gravatar.com/avatar/${userMd5}`;
+    localStorage.setItem('user', JSON.stringify(
+      { name: userName, score: 0, image },
+    ));
   }
 
   handleClickConfig= () => {
     const { history } = this.props;
-    // console.log(this.props);
     history.push('/config');
   }
 
   render() {
-    const { name, gravatarEmail, disableBtn } = this.state;
+    const { userName, userEmail, disableBtn } = this.state;
     return (
       <form>
-        <label htmlFor="name">
+        <label htmlFor="userName">
           Nome:
           <input
             type="text"
             onChange={ this.handleChange }
             data-testid="input-player-name"
-            name="name"
-            id="name"
-            value={ name }
+            name="userName"
+            id="userName"
+            value={ userName }
           />
         </label>
         <label htmlFor="gravatarEmail">
@@ -64,15 +71,15 @@ state={
             type="email"
             onChange={ this.handleChange }
             data-testid="input-gravatar-email"
-            name="gravatarEmail"
-            id="gravatarEmail"
-            value={ gravatarEmail }
+            name="userEmail"
+            id="userEmail"
+            value={ userEmail }
           />
         </label>
         <div className="login-btn">
           <button
             type="button"
-            onClick={ this.handleClick }
+            onClick={ this.handleSubmit }
             data-testid="btn-play"
             disabled={ disableBtn }
           >
@@ -102,7 +109,8 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchToken: () => dispatch(fetchTokenThunk()),
-  userInfo: (user) => dispatch(loginAction(user)),
+  userInfo: (userName, userEmail) => dispatch(loginAction(userName, userEmail)),
+  // fetchQuestions: () => dispatch(fetchQuestionThunk()),
 });
 
 export default connect(null, mapDispatchToProps)(Login);

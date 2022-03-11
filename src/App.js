@@ -16,13 +16,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-
-// import logo from './trivia.png';
-// <div className="App">
-//   <header className="App-header">
-//     <img src={ logo } className="App-logo" alt="logo" />
-//     <p>
-//       SUA VEZ
-//     </p>
-//   </header>
-// </div>
