@@ -15,61 +15,105 @@ class Questions extends Component {
     const results = await getQuestions(token);
     console.log('results no did Mount: ', results);
     if (results.length) this.setState({ questions: results });
-    else this.getNewToken();
+    else this.getQuestionsAgain();
   }
 
-  getNewToken = async () => {
+  getQuestionsAgain = async () => {
     const { token } = await getToken();
     const results = await getQuestions(token);
-    console.log('results no getNewToken: ', results);
+    console.log('results no getQuestionsAgain: ', results);
     this.setState({ questions: results });
+  }
+
+  handleClick = () => {
+    const { questionIndex } = this.state;
+    const QUESTIONS = 4;
+    if (questionIndex <= QUESTIONS) {
+      // fazer a lógica da próxima pergunta
+      this.setState({ questionIndex: questionIndex + 1 });
+    } else {
+      console.log('está na última pergunta');
+    }
+  }
+
+  // função aqui para renderizar
+
+  // questions[questionIndex]
+  // quando acabar a question faz um this.setstate questionIndex+1
+  // quando chegar na quinta pergunta o botão "proxima" manda para outra tela.
+
+  // primeiro gera os 4 botões
+  // gera o correct com o data-test id dele
+  // o incorrect ou os 3 incorrects gera com data-testid${index}
+  // e soma mais 1 no index enquanto existir(booleano soma uma vez só)
+  // let index = 0 e soma até no máximo 2
+  // depois faz o shuffle
+  // return 4 (<button></button>)
+
+  // onde chamar a renderQuestion a primeira vez?
+  renderBtns = () => {
+    const { questions, questionIndex } = this.state;
+    const {
+      correct_answer: correctAnswer,
+      incorrect_answers: incorrectAnswers,
+    } = questions[questionIndex];
+    const btnCorrect = (
+      <button
+        type="button"
+        data-testid="correct-answer"
+        onClick={ this.verifyAnswer }
+      >
+        {correctAnswer}
+      </button>);
+    const btnsIncorrect = incorrectAnswers.map((answer, index) => (
+      <button
+        type="button"
+        data-testid={ `wrong-answer-${index}` }
+        key={ Math.random() }
+      >
+        {answer}
+      </button>
+    ));
+    this.shuffleBtns(btnCorrect, btnsIncorrect);
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
   // let list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   // list = list.sort(() => Math.random() - 0.5)
 
+  shuffleBtns = (btnCorrect, btnsIncorrect) => {
+    const btns = [btnCorrect, ...btnsIncorrect];
+    console.log(btns);
+    const NUMBER = 0.5;
+    return btns.sort(() => Math.random() - NUMBER);
+  }
+
   render() {
-    const { questions } = this.state;
-    const shuffleList = (correctAnswer, incorrectAnswers) => {
-      const answers = [correctAnswer, ...incorrectAnswers];
-      const NUMBER = 0.5;
-      return answers.sort(() => Math.random() - NUMBER);
-    };
+    console.log('passou no render');
+    const { questions, questionIndex } = this.state;
     return (
       <div>
-        {questions.map(({ category, question, correct_answer: correctAnswer, incorrect_answers: incorrectAnswers }) => (
-          <div key={ Math.random() }>
-
-            <p data-testid="question-text" key={ Math.random() }>{question}</p>
-            <p data-testid="question-category" key={ Math.random() }>{category}</p>
-            <div>
-              {shuffleList(correctAnswer, incorrectAnswers).map((answer, index) => {
-                let dataTestId = `wrong-answer-${index}`;
-                if (answer === correctAnswer) dataTestId = 'correct-answer';
-                return (
-                  <button
-                    type="button"
-                    key={ Math.random() }
-                    data-testit={ dataTestId }
-                  >
-                    {answer}
-                  </button>
-                );
-              })}
-
-            </div>
-            <button type="button">
-              Próxima
-            </button>
+        Game
+        <div>
+          {questions.length && questions[questionIndex].map(({ category, question }) => (
+            <section key={ Math.random() }>
+              <p data-testid="question-text" key={ Math.random() }>{question}</p>
+              <p data-testid="question-category" key={ Math.random() }>{category}</p>
+            </section>
+          ))}
+          <div>
+            {this.renderBtns}
           </div>
-        ))}
-
+          <button type="button" onClick={ this.handleClick }>
+            Próxima
+          </button>
+        </div>
       </div>
+
     );
   }
 }
-// category, correct_answer, difficulty, incorrect_answers, question, type
+
 Questions.propTypes = {
   token: string.isRequired,
 };
@@ -87,3 +131,5 @@ export default connect(mapStateToProps)(Questions);
 // As alternativas devem estar dentro de uma tag que possui o atributo data-testid com o valor answer-options
 // As alternativas devem ser exibidas em ordem aleatória
 // Dica: utilize botões (<button/>) para as alternativas
+
+// fazer um componente para cada pergunta e passar cada pergunta via props
