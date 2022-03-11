@@ -37,11 +37,15 @@ class Questions extends Component {
   handleClick = () => {
     const { questionIndex, disabled } = this.state;
     const QUESTIONS = 4;
+    this.setState({
+      correctBorder: '',
+      incorrectBorder: '',
+    });
     if (questionIndex < QUESTIONS) {
       // fazer a lógica da próxima pergunta
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
-      console.log('history.push')
+      console.log('history.push');
       const { history } = this.props;
       history.push('/feedback');
     }
