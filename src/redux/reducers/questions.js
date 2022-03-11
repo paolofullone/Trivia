@@ -5,17 +5,16 @@ import {
 
 const initialState = {
   questions: '',
+  responseCode: '',
 };
 
 function questionsReducer(state = initialState, action) {
-  console.log(action);
-  console.log(action.payload);
-
   switch (action.type) {
   case FETCH_QUESTIONS_SUCCESS:
     return {
       ...state,
       questions: action.payload.results,
+      responseCode: action.payload.response_code,
     };
   case FETCH_QUESTIONS_FAILURE:
     return action.payload;
