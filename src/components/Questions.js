@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import getQuestions from '../services/GetQuestions';
 import getToken from '../services/GetToken';
-import '../App.css';
+import './Questions.css';
 
 class Questions extends Component {
   state = {
     questions: [],
     questionIndex: 0,
     disabled: false,
-    border: '',
+    correctBorder: '',
+    incorrectBorder: '',
   }
 
   componentDidMount = async () => {
@@ -25,6 +26,7 @@ class Questions extends Component {
     }
     console.log(results);
   }
+  // componente separado para o timer
 
   getQuestionsAgain = async () => {
     const { token } = await getToken();
@@ -45,24 +47,26 @@ class Questions extends Component {
     this.setState({ disabled: !disabled });
   }
 
-  verifyAnswer = ({ target }) => {
+  verifyAnswer = async ({ target }) => {
     const { disabled } = this.state;
-    // const verify = target.className;
+    this.setState({
+      disabled: !disabled,
+      correctBorder: 'green-border',
+      incorrectBorder: 'red-border',
+    });
     console.log(target.className);
     if (target.className === 'correct') {
       console.log(target);
       target.classList.add('green-border');
-    } else {
+    }
+    if (target.className === 'incorrect') {
       console.log(target);
       target.classList.add('red-border');
     }
-    this.setState({
-      disabled: !disabled,
-    });
   }
 
   renderBtns = (questions, questionIndex) => {
-    const { disabled } = this.state;
+    const { disabled, correctBorder, incorrectBorder } = this.state;
     const {
       correct_answer: correctAnswer,
       incorrect_answers: incorrectAnswers,
@@ -72,7 +76,7 @@ class Questions extends Component {
         type="button"
         data-testid="correct-answer"
         onClick={ this.verifyAnswer }
-        className="correct"
+        className={ `correct ${correctBorder}` }
         disabled={ disabled }
       >
         {correctAnswer}
@@ -83,7 +87,7 @@ class Questions extends Component {
         data-testid={ `wrong-answer-${index}` }
         key={ Math.random() }
         onClick={ this.verifyAnswer }
-        className="incorrect"
+        className={ `incorrect ${incorrectBorder}` }
         disabled={ disabled }
 
       >
