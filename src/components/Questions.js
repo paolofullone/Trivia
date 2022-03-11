@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { string } from 'prop-types';
+import PropTypes from 'prop-types';
 import getQuestions from '../services/GetQuestions';
 import getToken from '../services/GetToken';
 
@@ -45,21 +45,10 @@ class Questions extends Component {
     }
   }
 
-  // função aqui para renderizar
+  verifyAnswer = ({ target }) => {
+    console.log(target);
+  }
 
-  // questions[questionIndex]
-  // quando acabar a question faz um this.setstate questionIndex+1
-  // quando chegar na quinta pergunta o botão "proxima" manda para outra tela.
-
-  // primeiro gera os 4 botões
-  // gera o correct com o data-test id dele
-  // o incorrect ou os 3 incorrects gera com data-testid${index}
-  // e soma mais 1 no index enquanto existir(booleano soma uma vez só)
-  // let index = 0 e soma até no máximo 2
-  // depois faz o shuffle
-  // return 4 (<button></button>)
-
-  // onde chamar a renderQuestion a primeira vez?
   renderBtns = (questions, questionIndex) => {
     const {
       correct_answer: correctAnswer,
@@ -87,8 +76,6 @@ class Questions extends Component {
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
-  // let list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  // list = list.sort(() => Math.random() - 0.5)
 
   shuffleBtns = (btnCorrect, btnsIncorrect) => {
     const btns = [btnCorrect, ...btnsIncorrect];
@@ -126,7 +113,7 @@ class Questions extends Component {
 }
 
 Questions.propTypes = {
-  token: string.isRequired,
+  token: PropTypes.string.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -135,15 +122,3 @@ Questions.propTypes = {
 const mapStateToProps = ({ token }) => ({ token });
 
 export default connect(mapStateToProps)(Questions);
-
-// A aplicação deve ser capaz de gerar um novo token da API no caso de ele expirar
-// A categoria da pergunta (campo category) deve ser exibida em um elemento com o atributo data-testid com o valor question-category para a pessoa que está jogando
-// O texto da pergunta (campo question) deve ser exibido em um elemento com o atributo data-testid com o valor question-text para a pessoa que está jogando
-// O texto com as alternativas devem ser exibidos seguindo as regras abaixo:
-// O elemento com a alternativa correta deve possuir o atributo data-testid com o valor correct-answer
-// Os elementos com as alternativas incorretas devem possuir o atributo data-testid com o valor wrong-answer-${index}, com ${index} iniciando com o valor 0
-// As alternativas devem estar dentro de uma tag que possui o atributo data-testid com o valor answer-options
-// As alternativas devem ser exibidas em ordem aleatória
-// Dica: utilize botões (<button/>) para as alternativas
-
-// fazer um componente para cada pergunta e passar cada pergunta via props
