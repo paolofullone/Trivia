@@ -28,20 +28,41 @@ class Questions extends Component {
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
   // let list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
   // list = list.sort(() => Math.random() - 0.5)
-  shuffleList = (correctAnswer, incorrectAnswers) => {
-    const answers = [correctAnswer, ...incorrectAnswers];
-    const NUMBER = 0.5;
-    return answers.sort(() => Math.random() - NUMBER);
-  }
 
   render() {
     const { questions } = this.state;
-
+    const shuffleList = (correctAnswer, incorrectAnswers) => {
+      const answers = [correctAnswer, ...incorrectAnswers];
+      const NUMBER = 0.5;
+      return answers.sort(() => Math.random() - NUMBER);
+    };
     return (
       <div>
-        {questions.map(({ question }) => (
-          <p key={Math.random()}>{question}</p>
-          // fazer o map das alternativas usando a shuffleList e passando correct e incorrect.
+        {questions.map(({ category, question, correct_answer: correctAnswer, incorrect_answers: incorrectAnswers }) => (
+          <div key={ Math.random() }>
+
+            <p data-testid="question-text" key={ Math.random() }>{question}</p>
+            <p data-testid="question-category" key={ Math.random() }>{category}</p>
+            <div>
+              {shuffleList(correctAnswer, incorrectAnswers).map((answer, index) => {
+                let dataTestId = `wrong-answer-${index}`;
+                if (answer === correctAnswer) dataTestId = 'correct-answer';
+                return (
+                  <button
+                    type="button"
+                    key={ Math.random() }
+                    data-testit={ dataTestId }
+                  >
+                    {answer}
+                  </button>
+                );
+              })}
+
+            </div>
+            <button type="button">
+              Próxima
+            </button>
+          </div>
         ))}
 
       </div>
