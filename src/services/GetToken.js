@@ -1,7 +1,7 @@
-const TRIVIA_BASE_API = 'https://opentdb.com/api_token.php?command=request';
+const TOKEN_BASE_API = 'https://opentdb.com/api_token.php?command=request';
 
 const getToken = async () => {
-  const response = await fetch(TRIVIA_BASE_API);
+  const response = await fetch(TOKEN_BASE_API);
   const json = await response.json();
   localStorage.setItem('token', JSON.stringify(json));
 

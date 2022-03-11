@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
-import { fetchTokenThunk, loginAction, fetchQuestionThunk } from '../redux/actions';
+import { fetchTokenThunk, loginAction } from '../redux/actions';
 
 class Login extends Component {
 state={
@@ -36,12 +36,11 @@ state={
   }
 
   handleSubmit = async () => {
-    const { history, userInfo, fetchToken, fetchQuestions } = this.props;
+    const { history, userInfo, fetchToken } = this.props;
     const { userName, userEmail } = this.state;
     this.setLocalStorageUser(userName, userEmail);
     await userInfo(userName, userEmail);
     await fetchToken();
-    await fetchQuestions();
     history.push('/game');
   }
 
@@ -102,7 +101,7 @@ Login.propTypes = {
   // dispatch: PropTypes.func.isRequired,
   userInfo: PropTypes.func.isRequired,
   fetchToken: PropTypes.func.isRequired,
-  fetchQuestions: PropTypes.func.isRequired,
+  // fetchQuestions: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -110,7 +109,6 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchToken: () => dispatch(fetchTokenThunk()),
-  fetchQuestions: () => dispatch(fetchQuestionThunk()),
   userInfo: (userName, userEmail) => dispatch(loginAction(userName, userEmail)),
 });
 
