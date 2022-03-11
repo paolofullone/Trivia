@@ -25,16 +25,30 @@ class Questions extends Component {
     this.setState({ questions: results });
   }
 
+  // https://flaviocopes.com/how-to-shuffle-array-javascript/
+  // let list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  // list = list.sort(() => Math.random() - 0.5)
+  shuffleList = (correctAnswer, incorrectAnswers) => {
+    const answers = [correctAnswer, ...incorrectAnswers];
+    const NUMBER = 0.5;
+    return answers.sort(() => Math.random() - NUMBER);
+  }
+
   render() {
     const { questions } = this.state;
-    console.log('questions: ', questions);
+
     return (
       <div>
-        Questions
-      </div>);
+        {questions.map(({ question }) => (
+          <p key={Math.random()}>{question}</p>
+          // fazer o map das alternativas usando a shuffleList e passando correct e incorrect.
+        ))}
+
+      </div>
+    );
   }
 }
-
+// category, correct_answer, difficulty, incorrect_answers, question, type
 Questions.propTypes = {
   token: string.isRequired,
 };
@@ -52,7 +66,3 @@ export default connect(mapStateToProps)(Questions);
 // As alternativas devem estar dentro de uma tag que possui o atributo data-testid com o valor answer-options
 // As alternativas devem ser exibidas em ordem aleatória
 // Dica: utilize botões (<button/>) para as alternativas
-
-// https://flaviocopes.com/how-to-shuffle-array-javascript/
-// let list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-// list = list.sort(() => Math.random() - 0.5)
