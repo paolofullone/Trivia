@@ -77,7 +77,7 @@ class Questions extends Component {
       <button
         type="button"
         data-testid={ `wrong-answer-${index}` }
-        key={Math.random()}
+        key={ Math.random() }
         onClick={ this.verifyAnswer }
       >
         {answer}
@@ -127,6 +127,9 @@ class Questions extends Component {
 
 Questions.propTypes = {
   token: string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 const mapStateToProps = ({ token }) => ({ token });
