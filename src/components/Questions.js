@@ -13,15 +13,16 @@ class Questions extends Component {
   componentDidMount = async () => {
     const { token } = this.props;
     const results = await getQuestions(token);
-    // console.log('results: ', results);
+    console.log('results no did Mount: ', results);
     if (results.length) this.setState({ questions: results });
     else this.getNewToken();
   }
 
   getNewToken = async () => {
-    const token = await getToken();
-    const questions = await getQuestions(token);
-    this.setState({ questions });
+    const { token } = await getToken();
+    const results = await getQuestions(token);
+    console.log('results no getNewToken: ', results);
+    this.setState({ questions: results });
   }
 
   render() {
