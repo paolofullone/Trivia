@@ -5,8 +5,6 @@ import {
 
 const initialState = {
   questions: '',
-  questions2: '',
-  questions3: '',
 };
 
 function questionsReducer(state = initialState, action) {
@@ -18,8 +16,6 @@ function questionsReducer(state = initialState, action) {
     return {
       ...state,
       questions: action.payload.results,
-      questions2: action,
-      questions3: action.payload,
     };
   case FETCH_QUESTIONS_FAILURE:
     return action.payload;
