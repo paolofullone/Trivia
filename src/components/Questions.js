@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 // import { fetchQuestionThunk } from '../redux/actions';
 
 class Questions extends Component {
@@ -20,9 +20,9 @@ class Questions extends Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//   fetchQuestions: () => dispatch(fetchQuestionThunk()),
-// });
+const mapStateToProps = (state) => ({
+  questions: state.question.questions,
+  responseCode: state.question.responseCode,
+});
 
-// export default connect(null, mapDispatchToProps)(Questions);
-export default Questions;
+export default connect(mapStateToProps, null)(Questions);
