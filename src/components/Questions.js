@@ -41,6 +41,7 @@ class Questions extends Component {
       // fazer a lógica da próxima pergunta
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
+      console.log('history.push')
       const { history } = this.props;
       history.push('/feedback');
     }
@@ -140,4 +141,4 @@ Questions.propTypes = {
 
 const mapStateToProps = ({ token }) => ({ token });
 
-export default connect(mapStateToProps)(Questions);
+export default connect(mapStateToProps, null)(Questions);
