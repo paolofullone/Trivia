@@ -37,10 +37,6 @@ class Questions extends Component {
   handleClick = () => {
     const { questionIndex, disabled } = this.state;
     const QUESTIONS = 4;
-    this.setState({
-      correctBorder: '',
-      incorrectBorder: '',
-    });
     if (questionIndex < QUESTIONS) {
       // fazer a lógica da próxima pergunta
       this.setState({ questionIndex: questionIndex + 1 });
@@ -49,7 +45,11 @@ class Questions extends Component {
       const { history } = this.props;
       history.push('/feedback');
     }
-    this.setState({ disabled: !disabled });
+    this.setState({
+      disabled: !disabled,
+      correctBorder: '',
+      incorrectBorder: '',
+    });
   }
 
   verifyAnswer = async ({ target }) => {
@@ -111,6 +111,7 @@ class Questions extends Component {
   }
 
   render() {
+    console.log(this.props);
     const { questions, questionIndex } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
