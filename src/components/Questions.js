@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import getQuestions from '../services/GetQuestions';
 import getToken from '../services/GetToken';
 import './Questions.css';
@@ -12,6 +13,7 @@ class Questions extends Component {
     disabled: false,
     correctBorder: '',
     incorrectBorder: '',
+    btnHidden: true,
   }
 
   componentDidMount = async () => {
@@ -41,9 +43,8 @@ class Questions extends Component {
       // fazer a lógica da próxima pergunta
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
-      console.log('history.push');
-      const { history } = this.props;
-      history.push('/feedback');
+      console.log('redirect');
+      return (<Redirect to="/feedback" />);
     }
     this.setState({
       disabled: !disabled,
@@ -58,6 +59,7 @@ class Questions extends Component {
       disabled: !disabled,
       correctBorder: 'green-border',
       incorrectBorder: 'red-border',
+      btnHidden: false,
     });
     console.log(target.className);
     if (target.className === 'correct') {
@@ -112,7 +114,7 @@ class Questions extends Component {
 
   render() {
     console.log(this.props);
-    const { questions, questionIndex } = this.state;
+    const { questions, questionIndex, btnHidden } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
     return (
@@ -127,8 +129,13 @@ class Questions extends Component {
           <div data-testid="answer-options">
             {this.renderBtns(questions, questionIndex)}
           </div>
-          <button type="button" onClick={ this.handleClick }>
-            Próxima
+          <button
+            hidden={ btnHidden }
+            data-testid="btn-next"
+            type="button"
+            onClick={ this.handleClick }
+          >
+            Next
           </button>
         </div>
       </div>
