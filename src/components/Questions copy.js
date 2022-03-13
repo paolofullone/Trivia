@@ -96,7 +96,6 @@ class Questions extends Component {
         onClick={ this.verifyAnswer }
         className={ `incorrect ${incorrectBorder}` }
         disabled={ disabled }
-
       >
         {answer}
       </button>
