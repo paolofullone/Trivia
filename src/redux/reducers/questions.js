@@ -1,21 +1,21 @@
-// import {
-//   FETCH_QUESTIONS_SUCCESS,
-// } from '../actions';
+import {
+  FETCH_QUESTIONS,
+} from '../actions';
 
-// const initialState = {
-//   questions: '',
-// };
+const initialState = {
+  questions: [],
+};
 
-// function questionsReducer(state = initialState, action) {
-//   switch (action.type) {
-//   case FETCH_QUESTIONS_SUCCESS:
-//     return {
-//       ...state,
-//       questions: action.payload.results,
-//     };
-//   default:
-//     return state;
-//   }
-// }
+function questionsReducer(state = initialState, action) {
+  switch (action.type) {
+  case FETCH_QUESTIONS:
+    return {
+      ...state,
+      questions: action.questions,
+    };
+  default:
+    return state;
+  }
+}
 
-// export default questionsReducer;
+export default questionsReducer;

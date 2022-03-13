@@ -3,6 +3,8 @@ import getToken from '../../services/GetToken';
 
 export const LOGIN = 'LOGIN';
 
+export const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
+
 export const FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCESS';
 export const FETCH_TOKEN_FAILURE = 'FETCH_TOKEN_FAILURE';
 
@@ -12,15 +14,15 @@ export const loginAction = (userName, userEmail) => ({
   userEmail,
 });
 
-export const questionsSuccessAction = (payload) => ({
-  type: LOGIN,
-  payload,
+export const questionsSuccessAction = (questions) => ({
+  type: FETCH_QUESTIONS,
+  questions,
 });
 
-export function fetchTokenSuccessAction(payload) {
+export function fetchTokenSuccessAction(token) {
   return {
     type: FETCH_TOKEN_SUCCESS,
-    payload,
+    token,
   };
 }
 
