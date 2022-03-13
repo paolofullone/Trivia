@@ -1,28 +1,28 @@
-/* const name = 'name';
-const picture = 'picture';
-const score = 'score';
+const USERS = 'users';
 
-if (!JSON.parse(localStorage.getItem(name))) {
-  localStorage.setItem(name, JSON.stringify([]));
+if (!JSON.parse(localStorage.getItem(USERS))) {
+  localStorage.setItem(USERS, JSON.stringify([]));
 }
 
-if (!JSON.parse(localStorage.getItem(picture))) {
-  localStorage.setItem(picture, JSON.stringify([]));
-}
+const readUsers = () => JSON.parse(localStorage.getItem(USERS));
+// console.log(readUsers());
 
-if (!JSON.parse(localStorage.getItem(score))) {
-  localStorage.setItem(score, JSON.stringify([]));
-}
+const saveUsers = (user) => localStorage
+  .setItem(USERS, JSON.stringify(user));
 
-const readUser = () => JSON.parse(localStorage.getItem(name));
-const saveUser = (user) => localStorage.setItem(name, JSON.stringify(user));
+// para salvar vários
+// const addLocalStorageUser = (user) => {
+//   if (user) {
+//     const users = readUsers();
+//     saveUsers([...users, user]);
+//   }
+// };
 
-const readGravatar = () => JSON.parse(localStorage.getItem(picture));
-const saveGravatar = (grEmail) => localStorage.setItem(picture, JSON.stringify(grEmail));
+const addLocalStorageUser = (user) => {
+  if (user) {
+    // const users = readUsers();
+    saveUsers([user]);
+  }
+};
 
-const readScore = () => JSON.parse(localStorage.getItem(score));
-const saveScore = (userScore) => localStorage.setItem(score, JSON.stringify(userScore));
-
-[
-  { name: nome-da-pessoa, score: 10, picture: url-da-foto-no-gravatar }
-] */
+export { saveUsers, readUsers, addLocalStorageUser };

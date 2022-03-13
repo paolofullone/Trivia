@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
+import { addLocalStorageUser } from '../utils/localStorage';
+import { userAction } from '../redux/actions';
 import './Questions.css';
 
 const ONE_SECOND = 1000;
@@ -9,10 +11,12 @@ const TIME_START = 30;
 class Questions extends Component {
   state = {
     questionIndex: 0,
-    disabled: false,
-    btnHidden: true,
-    correctBorder: '',
-    incorrectBorder: '',
+    score: 0,
+    assertions: 0,
+    disableAnswerBtn: false,
+    disableNextBtn: true,
+    greenBorder: '',
+    redBorder: '',
     shuffledAnswers: [],
     seconds: TIME_START,
   }
@@ -21,6 +25,13 @@ class Questions extends Component {
     this.renderBtns();
     this.countdown();
   }
+
+  // PODE RECEBER NEXT PROPS E NEXT STATE
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   // console.log(nextProps);
+  //   if (nextState.seconds < 1) return true;
+  //   return false;
+  // }
 
   // if reaches 0, stop timer.
   componentDidUpdate() {
@@ -32,11 +43,20 @@ class Questions extends Component {
 
   // function to start countdown timer
   countdown = () => {
+    // const { seconds } = this.state;
+    // console.log(seconds);
     this.timerId = setInterval(() => {
       this.setState((prevState) => ({
         seconds: prevState.seconds - 1,
+        // disableAnswerBtn: prevState.seconds <= 2,
+        // disableNextBtn: prevState.seconds >= 2,
       }));
     }, ONE_SECOND);
+    // if (seconds <= 2) {
+    //   const { disableAnswerBtn } = this.state;
+    //   this.setState({ disableAnswerBtn: true });
+    //   console.log(disableAnswerBtn);
+    // }
   }
 
   // function to re-start timer in next question
@@ -49,39 +69,90 @@ class Questions extends Component {
   // function to stop countdown (implement setLocalStorage at the same time)
   stop = () => {
     clearInterval(this.timerId);
-    const { seconds } = this.state;
-    console.log(seconds);
+    // const { seconds } = this.state;
+    // console.log(seconds);
   }
 
-  handleClick = () => {
-    const { questionIndex, disabled } = this.state;
-    const QUESTIONS = 4;
-    if (questionIndex < QUESTIONS) {
-      // fazer a lógica da próxima pergunta
+  handleClickNext = async () => {
+    const { questionIndex, disableAnswerBtn } = this.state;
+    const TOTAL_QUESTIONS = 4;
+    if (questionIndex < TOTAL_QUESTIONS) {
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
-      console.log('redirect');
-      // return (<Redirect to="/feedback" />);
+      const { history } = this.props;
+      // console.log('redirect');
+      this.savePlayerLocalStorage();
+      await this.updatePlayerInfo();
+      history.push('/feedback');
     }
     this.setState({
-      disabled: !disabled,
-      correctBorder: '',
-      incorrectBorder: '',
-    }, () => this.renderBtns());
+      disableAnswerBtn: !disableAnswerBtn,
+      greenBorder: '',
+      redBorder: '',
+      seconds: TIME_START,
+      disableNextBtn: true,
+    },
+    () => this.renderBtns(),
+    this.countdown());
+  }
+  // perguntar na monitoria porque a segunda não pode ter callback
+  // poderia colocar tudo em outra função
+
+  verifyAnswer = async ({ target }) => {
+    const { disableAnswerBtn } = this.state;
+    this.stop();
+    this.setState({
+      disableAnswerBtn: !disableAnswerBtn,
+      greenBorder: 'green-border',
+      redBorder: 'red-border',
+      disableNextBtn: false,
+    },
+    () => this.prepareNextQuestion(target));
+  }
+  // se no teste puder ler o score do redux, retirar essa atualização do localstorage
+
+  prepareNextQuestion = async (target) => {
+    this.renderBtns();
+    this.calculateScore(target);
+    this.savePlayerLocalStorage();
+    await this.updatePlayerInfo();
   }
 
-  verifyAnswer = async () => {
-    const { disabled } = this.state;
-    this.setState({
-      disabled: !disabled,
-      correctBorder: 'green-border',
-      incorrectBorder: 'red-border',
-      btnHidden: false,
-    }, ()=>this.renderBtns());
+  calculateScore = (target) => {
+    // console.log(target);
+    const { questionIndex, seconds } = this.state;
+    const { questions } = this.props;
+    const { difficulty } = questions[questionIndex];
+    const multiplier = { hard: 3, medium: 2, easy: 1 };
+    if (target.className === 'correct ') {
+      const POINTS = 10;
+      const answerScore = (POINTS + (seconds * multiplier[difficulty]));
+      this.setState((prevState) => ({
+        score: prevState.score + answerScore,
+        assertions: prevState.assertions + 1,
+      }));
+    }
+  }
+
+// acertei a pergunta, atualizou no state, não atualizou no localStorage nem no Redux
+
+  savePlayerLocalStorage = () => {
+    const { score, assertions } = this.state;
+    const { player: { playerName, image } } = this.props;
+    const playerRanking = { playerName, image, score, assertions };
+    addLocalStorageUser(playerRanking);
+    // saving in redux as well
+  };
+
+  updatePlayerInfo = async () => {
+    const { score, assertions } = this.state;
+    const { player: { playerName, image }, addUserDispatch } = this.props;
+    const payload = { playerName, score, image, assertions };
+    await addUserDispatch(payload);
   }
 
   renderBtns = () => {
-    const { disabled, questionIndex, correctBorder, incorrectBorder } = this.state;
+    const { disableAnswerBtn, questionIndex, greenBorder, redBorder } = this.state;
     const { questions } = this.props;
     const {
       correct_answer: correctAnswer,
@@ -94,8 +165,8 @@ class Questions extends Component {
         type="button"
         data-testid="correct-answer"
         onClick={ this.verifyAnswer }
-        className={ `correct ${correctBorder}` }
-        disabled={ disabled }
+        className={ `correct ${greenBorder}` }
+        disableAnswerBtn={ disableAnswerBtn }
       >
         {correctAnswer}
       </button>);
@@ -106,14 +177,15 @@ class Questions extends Component {
         data-testid={ `wrong-answer-${index}` }
         key={ Math.random() }
         onClick={ this.verifyAnswer }
-        className={ `incorrect ${incorrectBorder}` }
-        disabled={ disabled }
+        className={ `incorrect ${redBorder}` }
+        disableAnswerBtn={ disableAnswerBtn }
       >
         {answer}
       </button>
     ));
     const shuflled = this.shuffleBtns(btnCorrect, btnsIncorrect);
     this.setState({ shuffledAnswers: shuflled });
+    // return this.shuffleBtns(btnCorrect, btnsIncorrect);
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
@@ -124,9 +196,11 @@ class Questions extends Component {
   }
 
   render() {
+    console.log(this.props);
+    // const { player } = this.props;
+    // console.log(player);
     const { questions } = this.props;
-    // console.log(this.props);
-    const { questionIndex, btnHidden, shuffledAnswers, seconds } = this.state;
+    const { questionIndex, disableNextBtn, shuffledAnswers, seconds } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
     return (
@@ -139,14 +213,15 @@ class Questions extends Component {
           </section>
           <div data-testid="answer-options">
             {shuffledAnswers}
+            {/* {this.renderBtns()} */}
           </div>
           <p>{seconds}</p>
           <button
             key={ Math.random() }
-            hidden={ btnHidden }
+            hidden={ disableNextBtn }
             data-testid="btn-next"
             type="button"
-            onClick={ this.handleClick }
+            onClick={ this.handleClickNext }
           >
             Next
           </button>
@@ -159,11 +234,11 @@ class Questions extends Component {
 
 const mapStateToProps = (state) => ({
   questions: state.question.questions,
+  player: state.player,
 });
 
-export default connect(mapStateToProps, null)(Questions);
+const mapDispatchToProps = (dispatch) => ({
+  addUserDispatch: (payload) => dispatch(userAction(payload)),
+});
 
-// const mapDispatchToProps = (dispatch) => ({
-//   fetchToken: () => dispatch(fetchTokenThunk()),
-//   userInfo: (userName, userEmail) => dispatch(loginAction(userName, userEmail)),
-// });
+export default connect(mapStateToProps, mapDispatchToProps)(Questions);

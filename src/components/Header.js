@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import { readUsers } from '../utils/localStorage';
+
+// pegar o userName do estado global
+// console.log(readUsers());
 
 class Header extends Component {
   render() {
-    const { name, image, score } = JSON.parse(localStorage.getItem('user'));
+    const users = readUsers();
+    const { name, image, score } = users[users.length - 1];
+    console.log(name, image, score);
 
     return (
       <div className="user-header">

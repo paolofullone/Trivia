@@ -39,7 +39,7 @@ class Game extends Component {
         {questions && (
           <section>
             <Header />
-            <Questions />
+            <Questions { ...this.props } />
           </section>
         )}
 

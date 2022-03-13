@@ -8,10 +8,9 @@ export const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
 export const FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCESS';
 export const FETCH_TOKEN_FAILURE = 'FETCH_TOKEN_FAILURE';
 
-export const loginAction = (userName, userEmail) => ({
+export const userAction = (payload) => ({
   type: LOGIN,
-  userName,
-  userEmail,
+  payload,
 });
 
 export const questionsSuccessAction = (questions) => ({
