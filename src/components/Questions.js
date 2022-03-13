@@ -4,28 +4,56 @@ import { connect } from 'react-redux';
 import './Questions.css';
 
 class Questions extends Component {
-    state = {
-      questionIndex: 0,
-      disabled: false,
+  state = {
+    questionIndex: 0,
+    disabled: false,
+    btnHidden: true,
+    correctBorder: '',
+    incorrectBorder: '',
+    shuffledAnswers: [],
+  }
+
+  componentDidMount() {
+    this.renderBtns();
+  }
+
+  handleClick = () => {
+    const { questionIndex, disabled } = this.state;
+    const QUESTIONS = 4;
+    if (questionIndex < QUESTIONS) {
+      // fazer a lógica da próxima pergunta
+      this.setState({ questionIndex: questionIndex + 1 });
+    } else {
+      console.log('redirect');
+      // return (<Redirect to="/feedback" />);
+    }
+    this.setState({
+      disabled: !disabled,
       correctBorder: '',
       incorrectBorder: '',
-      btnHidden: true,
-      shuffledAnswers: [],
-    }
+    }, () => this.renderBtns());
+  }
 
-    componentDidMount() {
-      this.renderBtns();
-    }
+  verifyAnswer = async () => {
+    const { disabled } = this.state;
+    this.setState({
+      disabled: !disabled,
+      correctBorder: 'green-border',
+      incorrectBorder: 'red-border',
+      btnHidden: false,
+    }, ()=>this.renderBtns());
+  }
 
   renderBtns = () => {
-    const { disabled, correctBorder, incorrectBorder, questionIndex } = this.state;
-    const {questions} = this.props;
+    const { disabled, questionIndex, correctBorder, incorrectBorder } = this.state;
+    const { questions } = this.props;
     const {
       correct_answer: correctAnswer,
       incorrect_answers: incorrectAnswers,
     } = questions[questionIndex];
     const btnCorrect = (
       <button
+        id="answer-button"
         key={ Math.random() }
         type="button"
         data-testid="correct-answer"
@@ -37,6 +65,7 @@ class Questions extends Component {
       </button>);
     const btnsIncorrect = incorrectAnswers.map((answer, index) => (
       <button
+        id="answer-button"
         type="button"
         data-testid={ `wrong-answer-${index}` }
         key={ Math.random() }
@@ -52,7 +81,6 @@ class Questions extends Component {
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
-
   shuffleBtns = (btnCorrect, btnsIncorrect) => {
     const btns = [btnCorrect, ...btnsIncorrect];
     const NUMBER = 0.5;
@@ -61,7 +89,7 @@ class Questions extends Component {
 
   render() {
     const { questions } = this.props;
-    console.log(this.props);
+    // console.log(this.props);
     const { questionIndex, btnHidden, shuffledAnswers } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
