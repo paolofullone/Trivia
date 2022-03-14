@@ -29,13 +29,6 @@ class Questions extends Component {
     this.countdown();
   }
 
-  // PODE RECEBER NEXT PROPS E NEXT STATE
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   // console.log(nextProps);
-  //   if (nextState.seconds < 1) return true;
-  //   return false;
-  // }
-
   // if reaches 0, stop timer.
   componentDidUpdate() {
     const { seconds } = this.state;
