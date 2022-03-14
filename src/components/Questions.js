@@ -31,10 +31,18 @@ class Questions extends Component {
 
   // if reaches 0, stop timer.
   componentDidUpdate() {
-    const { seconds } = this.state;
-    if (seconds === TIME_LIMIT) {
+    const { seconds, disableAnswerBtn } = this.state;
+    if (seconds === TIME_LIMIT && !disableAnswerBtn) {
       this.stop();
+      this.disableBtn();
     }
+  }
+
+  disableBtn=() => {
+    this.setState({
+      disableAnswerBtn: true,
+      disableNextBtn: false,
+    }, () => this.renderBtns());
   }
 
   // function to start countdown timer
@@ -42,15 +50,8 @@ class Questions extends Component {
     this.timerId = setInterval(() => {
       this.setState((prevState) => ({
         seconds: prevState.seconds - 1,
-        // disableAnswerBtn: prevState.seconds <= 2,
-        // disableNextBtn: prevState.seconds >= 2,
       }));
     }, ONE_SECOND);
-    // if (seconds <= 2) {
-    //   const { disableAnswerBtn } = this.state;
-    //   this.setState({ disableAnswerBtn: true });
-    //   console.log(disableAnswerBtn);
-    // }
   }
 
   // function to re-start timer in next question
@@ -63,8 +64,6 @@ class Questions extends Component {
   // function to stop countdown (implement setLocalStorage at the same time)
   stop = () => {
     clearInterval(this.timerId);
-    // const { seconds } = this.state;
-    // console.log(seconds);
   }
 
   handleClickNext = async () => {
@@ -161,7 +160,7 @@ class Questions extends Component {
         data-testid="correct-answer"
         onClick={ this.verifyAnswer }
         className={ `correct ${greenBorder}` }
-        disableAnswerBtn={ disableAnswerBtn }
+        disabled={ disableAnswerBtn }
       >
         {correctAnswer}
       </button>);
@@ -173,7 +172,7 @@ class Questions extends Component {
         key={ Math.random() }
         onClick={ this.verifyAnswer }
         className={ `incorrect ${redBorder}` }
-        disableAnswerBtn={ disableAnswerBtn }
+        disabled={ disableAnswerBtn }
       >
         {answer}
       </button>

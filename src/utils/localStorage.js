@@ -32,7 +32,7 @@ const savePlayers = (player) => localStorage
 
 const addLocalStoragePlayersRanking = (player) => {
   if (player) {
-    const players = readPlayers();
+    const players = readPlayers() || [];
     savePlayers([...players, player]);
   }
 };
