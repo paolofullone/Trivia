@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 import { fetchTokenThunk, userAction } from '../redux/actions';
-import { addLocalStorageUser } from '../utils/localStorage';
+import { addLocalStoragePlayer } from '../utils/localStorage';
 
 class Login extends Component {
 state={
@@ -35,7 +35,7 @@ state={
     const image = `https://www.gravatar.com/avatar/${userMd5}`;
     const user = { playerName: userName, score: 0, image, assertions: 0 };
     await addUserDispatch(user);
-    addLocalStorageUser(user);
+    addLocalStoragePlayer(user);
   }
 
   handleSubmit = async () => {

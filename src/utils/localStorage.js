@@ -1,30 +1,47 @@
-const USERS = 'users';
-// const USERS_RANKING = 'users_ranking';
+const PLAYER = 'player';
 
-if (!JSON.parse(localStorage.getItem(USERS))) {
-  localStorage.setItem(USERS, JSON.stringify([]));
+if (!JSON.parse(localStorage.getItem(PLAYER))) {
+  localStorage.setItem(PLAYER, JSON.stringify([]));
 }
 
-const readUsers = () => JSON.parse(localStorage.getItem(USERS));
-// console.log(readUsers());
+const readPlayer = () => JSON.parse(localStorage.getItem(PLAYER));
+// console.log(readPlayer());
 
-const saveUsers = (user) => localStorage
-  .setItem(USERS, JSON.stringify(user));
+const savePlayer = (user) => localStorage
+  .setItem(PLAYER, JSON.stringify(user));
 
-const addLocalStorageUser = (user) => {
+const addLocalStoragePlayer = (user) => {
   if (user) {
-    // const users = readUsers();
-    saveUsers([user]);
+    // const Player = readPlayer();
+    savePlayer([user]);
   }
 };
 
-// para salvar vários
-// const addLocalStorageUserRanking = (user) => {
-//   if (user) {
-//     const users = readUsers();
-//     saveUsers([...users, user]);
-//   }
-// };
+// para salvar vários (ranking)
+const PLAYERS_RANKING = 'players_ranking';
 
-// export { saveUsers, readUsers, addLocalStorageUser, addLocalStorageUserRanking };
-export { saveUsers, readUsers, addLocalStorageUser };
+if (!JSON.parse(localStorage.getItem(PLAYERS_RANKING))) {
+  localStorage.setItem(PLAYERS_RANKING, JSON.stringify([]));
+}
+
+const readPlayers = () => JSON.parse(localStorage.getItem(PLAYERS_RANKING));
+// console.log(readUsers());
+
+const savePlayers = (player) => localStorage
+  .setItem(PLAYERS_RANKING, JSON.stringify(player));
+
+const addLocalStoragePlayersRanking = (player) => {
+  if (player) {
+    const players = readPlayers();
+    savePlayers([...players, player]);
+  }
+};
+
+export {
+  readPlayer,
+  savePlayer,
+  addLocalStoragePlayer,
+  readPlayers,
+  savePlayers,
+  addLocalStoragePlayersRanking,
+};

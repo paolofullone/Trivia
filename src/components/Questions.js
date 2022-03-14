@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addLocalStorageUser } from '../utils/localStorage';
+import {
+  addLocalStoragePlayer,
+  addLocalStoragePlayersRanking,
+} from '../utils/localStorage';
 import { scoreAction } from '../redux/actions';
 import './Questions.css';
 
@@ -78,9 +81,10 @@ class Questions extends Component {
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
       const { history } = this.props;
-      this.savePlayerLocalStorage();
+      this.savePlayerLocalStorageRanking();
       history.push('/feedback');
     }
+    // na ultima pergunta não entra nesse setState.
     this.setState({
       disableAnswerBtn: !disableAnswerBtn,
       greenBorder: '',
@@ -131,15 +135,22 @@ class Questions extends Component {
         score: localScore,
         assertions: localAssertions,
       };
-      addLocalStorageUser(playerRanking);
+      addLocalStoragePlayer(playerRanking);
     }
   }
+
+  savePlayerLocalStorageRanking = () => {
+    const { score, assertions } = this.state;
+    const { player: { playerName, image } } = this.props;
+    const playerRanking = { playerName, image, score, assertions };
+    addLocalStoragePlayersRanking(playerRanking);
+  };
 
   savePlayerLocalStorage = () => {
     const { score, assertions } = this.state;
     const { player: { playerName, image } } = this.props;
     const playerRanking = { playerName, image, score, assertions };
-    addLocalStorageUser(playerRanking);
+    addLocalStoragePlayer(playerRanking);
   };
 
   renderBtns = () => {
