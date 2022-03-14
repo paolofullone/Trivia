@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { addLocalStorageUser } from '../utils/localStorage';
-import { userAction } from '../redux/actions';
+import { scoreAction } from '../redux/actions';
 import './Questions.css';
 
 const ONE_SECOND = 1000;
@@ -43,8 +43,6 @@ class Questions extends Component {
 
   // function to start countdown timer
   countdown = () => {
-    // const { seconds } = this.state;
-    // console.log(seconds);
     this.timerId = setInterval(() => {
       this.setState((prevState) => ({
         seconds: prevState.seconds - 1,
@@ -80,7 +78,6 @@ class Questions extends Component {
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
       const { history } = this.props;
-      // console.log('redirect');
       this.savePlayerLocalStorage();
       await this.updatePlayerInfo();
       history.push('/feedback');
@@ -95,8 +92,6 @@ class Questions extends Component {
     () => this.renderBtns(),
     this.countdown());
   }
-  // perguntar na monitoria porque a segunda não pode ter callback
-  // poderia colocar tudo em outra função
 
   verifyAnswer = async ({ target }) => {
     const { disableAnswerBtn } = this.state;
@@ -115,13 +110,13 @@ class Questions extends Component {
     this.renderBtns();
     this.calculateScore(target);
     this.savePlayerLocalStorage();
-    await this.updatePlayerInfo();
+    // await this.updatePlayerInfo();
   }
 
-  calculateScore = (target) => {
-    // console.log(target);
-    const { questionIndex, seconds } = this.state;
-    const { questions } = this.props;
+  // dentro da calculateScore disparar a action que vai atualizar o redux, passando o score da questão respondida
+  calculateScore = async (target) => {
+    const { questionIndex, seconds, score, assertions } = this.state;
+    const { questions, scoreDispatch } = this.props;
     const { difficulty } = questions[questionIndex];
     const multiplier = { hard: 3, medium: 2, easy: 1 };
     if (target.className === 'correct ') {
@@ -131,10 +126,9 @@ class Questions extends Component {
         score: prevState.score + answerScore,
         assertions: prevState.assertions + 1,
       }));
+      scoreDispatch(answerScore);
     }
   }
-
-// acertei a pergunta, atualizou no state, não atualizou no localStorage nem no Redux
 
   savePlayerLocalStorage = () => {
     const { score, assertions } = this.state;
@@ -143,13 +137,6 @@ class Questions extends Component {
     addLocalStorageUser(playerRanking);
     // saving in redux as well
   };
-
-  updatePlayerInfo = async () => {
-    const { score, assertions } = this.state;
-    const { player: { playerName, image }, addUserDispatch } = this.props;
-    const payload = { playerName, score, image, assertions };
-    await addUserDispatch(payload);
-  }
 
   renderBtns = () => {
     const { disableAnswerBtn, questionIndex, greenBorder, redBorder } = this.state;
@@ -185,7 +172,6 @@ class Questions extends Component {
     ));
     const shuflled = this.shuffleBtns(btnCorrect, btnsIncorrect);
     this.setState({ shuffledAnswers: shuflled });
-    // return this.shuffleBtns(btnCorrect, btnsIncorrect);
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
@@ -196,9 +182,6 @@ class Questions extends Component {
   }
 
   render() {
-    console.log(this.props);
-    // const { player } = this.props;
-    // console.log(player);
     const { questions } = this.props;
     const { questionIndex, disableNextBtn, shuffledAnswers, seconds } = this.state;
     if (!questions.length) return <p>loading</p>;
@@ -213,7 +196,6 @@ class Questions extends Component {
           </section>
           <div data-testid="answer-options">
             {shuffledAnswers}
-            {/* {this.renderBtns()} */}
           </div>
           <p>{seconds}</p>
           <button
@@ -227,10 +209,15 @@ class Questions extends Component {
           </button>
         </div>
       </div>
-
     );
   }
 }
+
+Questions.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const mapStateToProps = (state) => ({
   questions: state.question.questions,
@@ -238,7 +225,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addUserDispatch: (payload) => dispatch(userAction(payload)),
+  scoreDispatch: (payload) => dispatch(scoreAction(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

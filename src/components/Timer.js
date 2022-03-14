@@ -52,7 +52,7 @@ export default class Timer extends Component {
             {seconds}
           </section>
           {/* already implemented componentDidMount ok */}
-          <button type="button" onClick={ this.countdown }>Start</button> 
+          <button type="button" onClick={ this.countdown }>Start</button>
           <button type="button" onClick={ this.next }>Reset</button>
           <button type="button" onClick={ this.stop }>Stop</button>
         </div>

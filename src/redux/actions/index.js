@@ -3,6 +3,8 @@ import getToken from '../../services/GetToken';
 
 export const LOGIN = 'LOGIN';
 
+export const QUESTION_SCORE = 'QUESTION_SCORE';
+
 export const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
 
 export const FETCH_TOKEN_SUCCESS = 'FETCH_TOKEN_SUCESS';
@@ -11,6 +13,11 @@ export const FETCH_TOKEN_FAILURE = 'FETCH_TOKEN_FAILURE';
 export const userAction = (payload) => ({
   type: LOGIN,
   payload,
+});
+
+export const scoreAction = (answerScore) => ({
+  type: QUESTION_SCORE,
+  answerScore,
 });
 
 export const questionsSuccessAction = (questions) => ({
