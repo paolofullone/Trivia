@@ -14,6 +14,7 @@ class HeaderFeedback extends Component {
         />
         <p data-testid="header-player-name">{playerName}</p>
         <p data-testid="header-score">{score}</p>
+
       </div>
     );
   }
