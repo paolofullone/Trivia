@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 class HeaderFeedback extends Component {
   render() {
     const { player: { image, playerName, score } } = this.props;
-    console.log(player);
     return (
       <div>
         <img
@@ -28,7 +27,7 @@ HeaderFeedback.propTypes = {
   player: PropTypes.shape({
     playerName: PropTypes.string,
     image: PropTypes.string,
-    score: number.isRequired,
+    score: PropTypes.number,
   }).isRequired,
 };
 
