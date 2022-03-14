@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import Questions from '../components/Questions';
 import getQuestions from '../services/GetQuestions';
@@ -47,6 +48,12 @@ class Game extends Component {
     );
   }
 }
+
+Game.propTypes = {
+  token: PropTypes.string.isRequired,
+  fetchQuestions: PropTypes.func.isRequired,
+
+};
 
 const mapDispatchToProps = (dispatch) => ({
   fetchQuestions: (questions) => dispatch(questionsSuccessAction(questions)),

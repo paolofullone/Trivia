@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 // import { readUsers } from '../utils/localStorage';
 // pegar o userName do estado global
@@ -24,6 +25,15 @@ class Header extends Component {
     );
   }
 }
+
+Header.propTypes = {
+  player: PropTypes.shape({
+    playerName: PropTypes.string,
+    image: PropTypes.string,
+    score: PropTypes.number,
+  }).isRequired,
+
+};
 
 const mapStateToProps = (state) => ({
   player: state.player,

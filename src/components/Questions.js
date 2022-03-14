@@ -79,7 +79,6 @@ class Questions extends Component {
     } else {
       const { history } = this.props;
       this.savePlayerLocalStorage();
-      await this.updatePlayerInfo();
       history.push('/feedback');
     }
     this.setState({
@@ -104,19 +103,16 @@ class Questions extends Component {
     },
     () => this.prepareNextQuestion(target));
   }
-  // se no teste puder ler o score do redux, retirar essa atualização do localstorage
 
   prepareNextQuestion = async (target) => {
     this.renderBtns();
     this.calculateScore(target);
-    this.savePlayerLocalStorage();
-    // await this.updatePlayerInfo();
   }
 
   // dentro da calculateScore disparar a action que vai atualizar o redux, passando o score da questão respondida
   calculateScore = async (target) => {
-    const { questionIndex, seconds, score, assertions } = this.state;
-    const { questions, scoreDispatch } = this.props;
+    const { questionIndex, seconds, assertions, score } = this.state;
+    const { questions, scoreDispatch, player: { playerName, image } } = this.props;
     const { difficulty } = questions[questionIndex];
     const multiplier = { hard: 3, medium: 2, easy: 1 };
     if (target.className === 'correct ') {
@@ -127,6 +123,15 @@ class Questions extends Component {
         assertions: prevState.assertions + 1,
       }));
       scoreDispatch(answerScore);
+      const localScore = score + answerScore;
+      const localAssertions = assertions + 1;
+      const playerRanking = {
+        playerName,
+        image,
+        score: localScore,
+        assertions: localAssertions,
+      };
+      addLocalStorageUser(playerRanking);
     }
   }
 
@@ -135,7 +140,6 @@ class Questions extends Component {
     const { player: { playerName, image } } = this.props;
     const playerRanking = { playerName, image, score, assertions };
     addLocalStorageUser(playerRanking);
-    // saving in redux as well
   };
 
   renderBtns = () => {
@@ -216,6 +220,15 @@ class Questions extends Component {
 Questions.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
+  }).isRequired,
+  scoreDispatch: PropTypes.func.isRequired,
+  player: PropTypes.shape({
+    playerName: PropTypes.string,
+    image: PropTypes.string,
+  }).isRequired,
+  questions: PropTypes.shape({
+    category: PropTypes.string,
+    length: PropTypes.number,
   }).isRequired,
 };
 

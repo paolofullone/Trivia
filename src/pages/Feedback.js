@@ -12,6 +12,7 @@ export default class Feedback extends Component {
     return (
       <div>
         <h2>Feedback</h2>
+        <p data-testid="feedback-text">mensagem de feedback</p>
         <button
           type="button"
           data-testid="btn-go-home"
