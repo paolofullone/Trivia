@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import HeaderFeedback from '../components/HeaderFeedback';
 
 export default class Feedback extends Component {
   handleClickHome = () => {
@@ -12,6 +13,7 @@ export default class Feedback extends Component {
     return (
       <div>
         <h2>Feedback</h2>
+        <HeaderFeedback />
         <p data-testid="feedback-text">mensagem de feedback</p>
         <button
           type="button"
