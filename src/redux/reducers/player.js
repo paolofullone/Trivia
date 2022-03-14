@@ -1,10 +1,10 @@
-import { LOGIN } from '../actions';
+import { LOGIN, QUESTION_SCORE } from '../actions';
 
 const initialState = {
-  name: '',
+  playerName: '',
   assertions: 0,
   score: 0,
-  gravatarEmail: '',
+  image: '',
 };
 
 function playerReducer(state = initialState, action) {
@@ -12,8 +12,16 @@ function playerReducer(state = initialState, action) {
   case LOGIN:
     return {
       ...state,
-      name: action.userName,
-      gravatarEmail: action.userEmail,
+      playerName: action.payload.playerName,
+      image: action.payload.image,
+      assertions: action.payload.assertions,
+      score: action.payload.score,
+    };
+  case QUESTION_SCORE:
+    return {
+      ...state,
+      assertions: state.assertions + 1,
+      score: state.score + action.answerScore,
     };
   default:
     return state;

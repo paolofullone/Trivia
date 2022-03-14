@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+// import { readUsers } from '../utils/localStorage';
+// pegar o userName do estado global
+// console.log(readUsers());
 
 class Header extends Component {
   render() {
-    const { name, image, score } = JSON.parse(localStorage.getItem('user'));
+    const { player: { playerName, score, image } } = this.props;
 
     return (
       <div className="user-header">
@@ -12,7 +18,7 @@ class Header extends Component {
             alt="avatar do usuário"
             data-testid="header-profile-picture"
           />
-          <p data-testid="header-player-name">{ name }</p>
+          <p data-testid="header-player-name">{ playerName }</p>
           <p data-testid="header-score">{ score }</p>
         </header>
       </div>
@@ -20,4 +26,17 @@ class Header extends Component {
   }
 }
 
-export default Header;
+Header.propTypes = {
+  player: PropTypes.shape({
+    playerName: PropTypes.string,
+    image: PropTypes.string,
+    score: PropTypes.number,
+  }).isRequired,
+
+};
+
+const mapStateToProps = (state) => ({
+  player: state.player,
+});
+
+export default connect(mapStateToProps)(Header);

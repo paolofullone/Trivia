@@ -1,111 +1,187 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import getQuestions from '../services/GetQuestions';
-import getToken from '../services/GetToken';
+import {
+  addLocalStoragePlayer,
+  addLocalStoragePlayersRanking,
+} from '../utils/localStorage';
+import { scoreAction } from '../redux/actions';
 import './Questions.css';
 
+const ONE_SECOND = 1000;
+const TIME_LIMIT = 0;
+const TIME_START = 30;
 class Questions extends Component {
   state = {
-    questions: [],
     questionIndex: 0,
-    disabled: false,
-    correctBorder: '',
-    incorrectBorder: '',
-    btnHidden: true,
+    score: 0,
+    assertions: 0,
+    disableAnswerBtn: false,
+    disableNextBtn: true,
+    greenBorder: '',
+    redBorder: '',
+    shuffledAnswers: [],
+    seconds: TIME_START,
   }
 
-  componentDidMount = async () => {
-    const { token } = this.props;
-    const results = await getQuestions(token);
-    if (results.length) {
-      this.setState({
-        questions: results,
-      });
-    } else {
-      this.getQuestionsAgain();
+  componentDidMount() {
+    this.renderBtns();
+    this.countdown();
+  }
+
+  // if reaches 0, stop timer.
+  componentDidUpdate() {
+    const { seconds, disableAnswerBtn } = this.state;
+    if (seconds === TIME_LIMIT && !disableAnswerBtn) {
+      this.stop();
+      this.disableBtn();
     }
-    console.log(results);
-  }
-  // componente separado para o timer
-
-  getQuestionsAgain = async () => {
-    const { token } = await getToken();
-    const results = await getQuestions(token);
-    this.setState({ questions: results });
   }
 
-  handleClick = () => {
-    const { questionIndex, disabled } = this.state;
-    const QUESTIONS = 4;
-    if (questionIndex < QUESTIONS) {
-      // fazer a lógica da próxima pergunta
+  disableBtn=() => {
+    this.setState({
+      disableAnswerBtn: true,
+      disableNextBtn: false,
+    }, () => this.renderBtns());
+  }
+
+  // function to start countdown timer
+  countdown = () => {
+    this.timerId = setInterval(() => {
+      this.setState((prevState) => ({
+        seconds: prevState.seconds - 1,
+      }));
+    }, ONE_SECOND);
+  }
+
+  // function to re-start timer in next question
+  next = () => {
+    this.setState({
+      seconds: TIME_START,
+    });
+  }
+
+  // function to stop countdown (implement setLocalStorage at the same time)
+  stop = () => {
+    clearInterval(this.timerId);
+  }
+
+  handleClickNext = async () => {
+    const { questionIndex, disableAnswerBtn } = this.state;
+    const TOTAL_QUESTIONS = 4;
+    if (questionIndex < TOTAL_QUESTIONS) {
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
-      console.log('redirect');
-      return (<Redirect to="/feedback" />);
+      const { history } = this.props;
+      this.savePlayerLocalStorageRanking();
+      history.push('/feedback');
     }
+    // na ultima pergunta não entra nesse setState.
     this.setState({
-      disabled: !disabled,
-      correctBorder: '',
-      incorrectBorder: '',
-    });
+      disableAnswerBtn: !disableAnswerBtn,
+      greenBorder: '',
+      redBorder: '',
+      seconds: TIME_START,
+      disableNextBtn: true,
+    },
+    () => this.renderBtns(),
+    this.countdown());
   }
 
   verifyAnswer = async ({ target }) => {
-    const { disabled } = this.state;
+    const { disableAnswerBtn } = this.state;
+    this.stop();
     this.setState({
-      disabled: !disabled,
-      correctBorder: 'green-border',
-      incorrectBorder: 'red-border',
-      btnHidden: false,
-    });
-    console.log(target.className);
-    if (target.className === 'correct') {
-      console.log(target);
-      target.classList.add('green-border');
-    }
-    if (target.className === 'incorrect') {
-      console.log(target);
-      target.classList.add('red-border');
+      disableAnswerBtn: !disableAnswerBtn,
+      greenBorder: 'green-border',
+      redBorder: 'red-border',
+      disableNextBtn: false,
+    },
+    () => this.prepareNextQuestion(target));
+  }
+
+  prepareNextQuestion = async (target) => {
+    this.renderBtns();
+    this.calculateScore(target);
+  }
+
+  // dentro da calculateScore disparar a action que vai atualizar o redux, passando o score da questão respondida
+  calculateScore = async (target) => {
+    const { questionIndex, seconds, assertions, score } = this.state;
+    const { questions, scoreDispatch, player: { playerName, image } } = this.props;
+    const { difficulty } = questions[questionIndex];
+    const multiplier = { hard: 3, medium: 2, easy: 1 };
+    if (target.className === 'correct ') {
+      const POINTS = 10;
+      const answerScore = (POINTS + (seconds * multiplier[difficulty]));
+      this.setState((prevState) => ({
+        score: prevState.score + answerScore,
+        assertions: prevState.assertions + 1,
+      }));
+      scoreDispatch(answerScore);
+      const localScore = score + answerScore;
+      const localAssertions = assertions + 1;
+      const playerRanking = {
+        playerName,
+        image,
+        score: localScore,
+        assertions: localAssertions,
+      };
+      addLocalStoragePlayer(playerRanking);
     }
   }
 
-  renderBtns = (questions, questionIndex) => {
-    const { disabled, correctBorder, incorrectBorder } = this.state;
+  savePlayerLocalStorageRanking = () => {
+    const { score, assertions } = this.state;
+    const { player: { playerName, image } } = this.props;
+    const playerRanking = { playerName, image, score, assertions };
+    addLocalStoragePlayersRanking(playerRanking);
+  };
+
+  savePlayerLocalStorage = () => {
+    const { score, assertions } = this.state;
+    const { player: { playerName, image } } = this.props;
+    const playerRanking = { playerName, image, score, assertions };
+    addLocalStoragePlayer(playerRanking);
+  };
+
+  renderBtns = () => {
+    const { disableAnswerBtn, questionIndex, greenBorder, redBorder } = this.state;
+    const { questions } = this.props;
     const {
       correct_answer: correctAnswer,
       incorrect_answers: incorrectAnswers,
     } = questions[questionIndex];
     const btnCorrect = (
       <button
+        id="answer-button"
+        key={ Math.random() }
         type="button"
         data-testid="correct-answer"
         onClick={ this.verifyAnswer }
-        className={ `correct ${correctBorder}` }
-        disabled={ disabled }
+        className={ `correct ${greenBorder}` }
+        disabled={ disableAnswerBtn }
       >
         {correctAnswer}
       </button>);
     const btnsIncorrect = incorrectAnswers.map((answer, index) => (
       <button
+        id="answer-button"
         type="button"
         data-testid={ `wrong-answer-${index}` }
         key={ Math.random() }
         onClick={ this.verifyAnswer }
-        className={ `incorrect ${incorrectBorder}` }
-        disabled={ disabled }
-
+        className={ `incorrect ${redBorder}` }
+        disabled={ disableAnswerBtn }
       >
         {answer}
       </button>
     ));
-    return this.shuffleBtns(btnCorrect, btnsIncorrect);
+    const shuflled = this.shuffleBtns(btnCorrect, btnsIncorrect);
+    this.setState({ shuffledAnswers: shuflled });
   }
 
   // https://flaviocopes.com/how-to-shuffle-array-javascript/
-
   shuffleBtns = (btnCorrect, btnsIncorrect) => {
     const btns = [btnCorrect, ...btnsIncorrect];
     const NUMBER = 0.5;
@@ -113,8 +189,8 @@ class Questions extends Component {
   }
 
   render() {
-    console.log(this.props);
-    const { questions, questionIndex, btnHidden } = this.state;
+    const { questions } = this.props;
+    const { questionIndex, disableNextBtn, shuffledAnswers, seconds } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
     return (
@@ -125,32 +201,47 @@ class Questions extends Component {
             <p data-testid="question-text" key={ Math.random() }>{question}</p>
             <p data-testid="question-category" key={ Math.random() }>{category}</p>
           </section>
-
           <div data-testid="answer-options">
-            {this.renderBtns(questions, questionIndex)}
+            {shuffledAnswers}
           </div>
+          <p>{seconds}</p>
           <button
-            hidden={ btnHidden }
+            key={ Math.random() }
+            hidden={ disableNextBtn }
             data-testid="btn-next"
             type="button"
-            onClick={ this.handleClick }
+            onClick={ this.handleClickNext }
           >
             Next
           </button>
         </div>
       </div>
-
     );
   }
 }
 
 Questions.propTypes = {
-  token: PropTypes.string.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  scoreDispatch: PropTypes.func.isRequired,
+  player: PropTypes.shape({
+    playerName: PropTypes.string,
+    image: PropTypes.string,
+  }).isRequired,
+  questions: PropTypes.shape({
+    category: PropTypes.string,
+    length: PropTypes.number,
+  }).isRequired,
 };
 
-const mapStateToProps = ({ token }) => ({ token });
+const mapStateToProps = (state) => ({
+  questions: state.question.questions,
+  player: state.player,
+});
 
-export default connect(mapStateToProps, null)(Questions);
+const mapDispatchToProps = (dispatch) => ({
+  scoreDispatch: (payload) => dispatch(scoreAction(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Questions);

@@ -1,28 +1,49 @@
-/* const name = 'name';
-const picture = 'picture';
-const score = 'score';
+const PLAYER = 'player';
 
-if (!JSON.parse(localStorage.getItem(name))) {
-  localStorage.setItem(name, JSON.stringify([]));
-}
+// Neste caso não precisa pois estamos setando um novo jogador toda vez e não estou atualizando.
+// if (!JSON.parse(localStorage.getItem(PLAYER))) {
+//   localStorage.setItem(PLAYER, JSON.stringify([]));
+// }
 
-if (!JSON.parse(localStorage.getItem(picture))) {
-  localStorage.setItem(picture, JSON.stringify([]));
-}
+const readPlayer = () => JSON.parse(localStorage.getItem(PLAYER));
+// console.log(readPlayer());
 
-if (!JSON.parse(localStorage.getItem(score))) {
-  localStorage.setItem(score, JSON.stringify([]));
-}
+const savePlayer = (user) => localStorage
+  .setItem(PLAYER, JSON.stringify(user));
 
-const readUser = () => JSON.parse(localStorage.getItem(name));
-const saveUser = (user) => localStorage.setItem(name, JSON.stringify(user));
+const addLocalStoragePlayer = (user) => {
+  if (user) {
+    // const Player = readPlayer();
+    savePlayer([user]);
+  }
+};
 
-const readGravatar = () => JSON.parse(localStorage.getItem(picture));
-const saveGravatar = (grEmail) => localStorage.setItem(picture, JSON.stringify(grEmail));
+// para salvar vários (ranking)
+const PLAYERS_RANKING = 'players_ranking';
 
-const readScore = () => JSON.parse(localStorage.getItem(score));
-const saveScore = (userScore) => localStorage.setItem(score, JSON.stringify(userScore));
+// Adicionei o || [] na linha 37 e eliminou a necessidade desse código.
+// if (!JSON.parse(localStorage.getItem(PLAYERS_RANKING))) {
+//   localStorage.setItem(PLAYERS_RANKING, JSON.stringify([]));
+// }
 
-[
-  { name: nome-da-pessoa, score: 10, picture: url-da-foto-no-gravatar }
-] */
+const readPlayers = () => JSON.parse(localStorage.getItem(PLAYERS_RANKING));
+// console.log(readUsers());
+
+const savePlayers = (player) => localStorage
+  .setItem(PLAYERS_RANKING, JSON.stringify(player));
+
+const addLocalStoragePlayersRanking = (player) => {
+  if (player) {
+    const players = readPlayers() || [];
+    savePlayers([...players, player]);
+  }
+};
+
+export {
+  readPlayer,
+  savePlayer,
+  addLocalStoragePlayer,
+  readPlayers,
+  savePlayers,
+  addLocalStoragePlayersRanking,
+};

@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
-import { fetchTokenThunk, loginAction } from '../redux/actions';
+import { fetchTokenThunk, userAction } from '../redux/actions';
+import { addLocalStoragePlayer } from '../utils/localStorage';
 
 class Login extends Component {
 state={
   userName: '',
   userEmail: '',
-  disableBtn: true,
+  disablePlayBtn: true,
 }
 
   handleChange = ({ target }) => {
@@ -22,24 +23,24 @@ state={
     const MIN_LENGTH = 1;
 
     if (emailRegex && userName.length >= MIN_LENGTH) {
-      return this.setState({ disableBtn: false });
+      return this.setState({ disablePlayBtn: false });
     }
-    return this.setState({ disableBtn: true });
+    return this.setState({ disablePlayBtn: true });
   }
 
-  setLocalStorageUser = (userName, userEmail) => {
+  setLocalStorageUser = async () => {
+    const { userName, userEmail } = this.state;
+    const { addUserDispatch } = this.props;
     const userMd5 = md5(userEmail).toString();
     const image = `https://www.gravatar.com/avatar/${userMd5}`;
-    localStorage.setItem('user', JSON.stringify(
-      { name: userName, score: 0, image },
-    ));
+    const user = { playerName: userName, score: 0, image, assertions: 0 };
+    await addUserDispatch(user);
+    addLocalStoragePlayer(user);
   }
 
   handleSubmit = async () => {
-    const { history, userInfo, fetchToken } = this.props;
-    const { userName, userEmail } = this.state;
-    this.setLocalStorageUser(userName, userEmail);
-    await userInfo(userName, userEmail);
+    const { history, fetchToken } = this.props;
+    await this.setLocalStorageUser();
     await fetchToken();
     history.push('/game');
   }
@@ -50,7 +51,7 @@ state={
   }
 
   render() {
-    const { userName, userEmail, disableBtn } = this.state;
+    const { userName, userEmail, disablePlayBtn } = this.state;
     return (
       <form>
         <label htmlFor="userName">
@@ -80,7 +81,7 @@ state={
             type="button"
             onClick={ this.handleSubmit }
             data-testid="btn-play"
-            disabled={ disableBtn }
+            disabled={ disablePlayBtn }
           >
             Play
           </button>
@@ -99,7 +100,7 @@ state={
 
 Login.propTypes = {
   // dispatch: PropTypes.func.isRequired,
-  userInfo: PropTypes.func.isRequired,
+  addUserDispatch: PropTypes.func.isRequired,
   fetchToken: PropTypes.func.isRequired,
   // fetchQuestions: PropTypes.func.isRequired,
   history: PropTypes.shape({
@@ -109,7 +110,7 @@ Login.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   fetchToken: () => dispatch(fetchTokenThunk()),
-  userInfo: (userName, userEmail) => dispatch(loginAction(userName, userEmail)),
+  addUserDispatch: (payload) => dispatch(userAction(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
