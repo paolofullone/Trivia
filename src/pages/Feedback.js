@@ -12,8 +12,7 @@ class Feedback extends Component {
   }
 
   render() {
-    const { assertions } = this.props;
-    console.log(assertions);
+    const { assertions, score } = this.props;
     return (
       <div>
         <h2>Feedback</h2>
@@ -22,6 +21,14 @@ class Feedback extends Component {
         <p data-testid="feedback-text">
           {assertions < MINIMUM_ASSERTIONS ? 'Could be better...' : 'Well Done!'}
         </p>
+        <p>
+          O placar final foi:
+        </p>
+        <p data-testid="feedback-total-score">{score}</p>
+        <p>
+          A quantidade de perguntas respondidas corretamente foi:
+        </p>
+        <p data-testid="feedback-total-question">{assertions}</p>
         <button
           type="button"
           data-testid="btn-go-home"
@@ -36,10 +43,12 @@ class Feedback extends Component {
 
 const mapStateToProps = (state) => ({
   assertions: state.player.assertions,
+  score: state.player.score,
 });
 
 Feedback.propTypes = {
-  assertions: PropTypes.string.isRequired,
+  assertions: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
