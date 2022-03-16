@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
-import { fetchTokenThunk, userAction } from '../redux/actions';
-import { addLocalStoragePlayer } from '../utils/localStorage';
+import { fetchTokenThunk, userAction } from '../../redux/actions';
+import { addLocalStoragePlayer } from '../../utils/localStorage';
+import Card from '../../components/Card';
+import '../../App.css';
+import './index.css';
 
 class Login extends Component {
 state={
@@ -53,47 +56,56 @@ state={
   render() {
     const { userName, userEmail, disablePlayBtn } = this.state;
     return (
-      <form>
-        <label htmlFor="userName">
-          Nome:
-          <input
-            type="text"
-            onChange={ this.handleChange }
-            data-testid="input-player-name"
-            name="userName"
-            id="userName"
-            value={ userName }
-          />
-        </label>
-        <label htmlFor="gravatarEmail">
-          Email:
-          <input
-            type="email"
-            onChange={ this.handleChange }
-            data-testid="input-gravatar-email"
-            name="userEmail"
-            id="userEmail"
-            value={ userEmail }
-          />
-        </label>
-        <div className="login-btn">
-          <button
-            type="button"
-            onClick={ this.handleSubmit }
-            data-testid="btn-play"
-            disabled={ disablePlayBtn }
-          >
-            Play
-          </button>
-          <button
-            type="button"
-            data-testid="btn-settings"
-            onClick={ this.handleClickConfig }
-          >
-            Configurações
-          </button>
+      <div>
+        <div id="container">
+          <Card />
+          <form>
+            <label htmlFor="userName">
+              Nome:
+              <input
+                type="text"
+                onChange={ this.handleChange }
+                data-testid="input-player-name"
+                name="userName"
+                id="userName"
+                value={ userName }
+              />
+            </label>
+            <label htmlFor="gravatarEmail">
+              Email:
+              <input
+                type="email"
+                onChange={ this.handleChange }
+                data-testid="input-gravatar-email"
+                name="userEmail"
+                id="userEmail"
+                value={ userEmail }
+              />
+            </label>
+            <div className="login-btn">
+              <button
+                type="button"
+                onClick={ this.handleSubmit }
+                data-testid="btn-play"
+                disabled={ disablePlayBtn }
+              >
+                Play
+              </button>
+              <button
+                type="button"
+                data-testid="btn-settings"
+                onClick={ this.handleClickConfig }
+              >
+                Configurações
+              </button>
+            </div>
+          </form>
+
         </div>
-      </form>
+        <div>
+          <img className="login-screen-image" src="https://imgur.com/LWKPCdr.png" alt="imagem do pink e cérebro" />
+        </div>
+      </div>
     );
   }
 }

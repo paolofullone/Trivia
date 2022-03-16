@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Card from '../components/Card';
 import getCategories from '../services/GetCategories';
 
 export default class Config extends Component {
@@ -19,7 +18,6 @@ export default class Config extends Component {
     return (
       <div>
         <h1 data-testid="settings-title">Config</h1>
-        <Card />
       </div>
     );
   }

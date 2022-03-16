@@ -1,7 +1,13 @@
-body {
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
   display: flex;
   justify-content: center;
-  width: 95%;
+  height: 100%;
+  margin: 0;
 }
 
 .App {
@@ -63,15 +69,14 @@ body {
 }
 
 form {
-  margin-top: 10rem;
-  width: 20vw;
-
+  width: 10vw;
+  z-index: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 
-button {
-  margin-top: 1rem;
-  width: 10rem;
-}
 
 label {
   display: flex;
@@ -82,3 +87,60 @@ label {
 .login-btn {
   text-align: center;
 }
+
+#container {
+  display: flex;
+justify-content: center;
+align-items: center;
+}
+
+/* card */
+
+/* From cssbuttons.io by @adamgiebl */
+.card {
+ width: 15vw;
+ height: 15vw;
+ background: linear-gradient(145deg, #2B86C5 0%, #FF3CAC 100%);
+ border-radius: 5px;
+ box-shadow: 10px 10px 9px #353535,
+ -10px -10px 9px #5c5c5c;
+ transition: box-shadow 0.7s ease;
+ z-index: 0;
+ position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card:hover {
+ box-shadow: 10px 10px 15px #353535,
+             -10px -10px 15px #5c5c5c;
+}
+
+
+ button {
+   margin-top: 1rem;
+   width: 75%;
+ }
+
+/* From cssbuttons.io by @adamgiebl */
+/* button {
+ color: #090909;
+ padding: 0.7em 1.7em;
+ font-size: 18px;
+ border-radius: 0.5em;
+ background: #e8e8e8;
+ border: 1px solid #e8e8e8;
+ transition: all .3s;
+ box-shadow: 6px 6px 12px #c5c5c5,
+             -6px -6px 12px #ffffff;
+}
+
+button:hover {
+ border: 1px solid white;
+}
+
+button:active {
+ box-shadow: 4px 4px 12px #c5c5c5,
+             -4px -4px 12px #ffffff;
+} */

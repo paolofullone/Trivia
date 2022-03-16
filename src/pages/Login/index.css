@@ -1,0 +1,22 @@
+body {
+    background-image: linear-gradient(to bottom right, #f6acc0, #eeefb4);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    /* height: 100%; */
+    /* font-family: sans-serif; */
+}
+
+.login-screen-image {
+ position: absolute;
+  left: 85%;
+  top: 80%;
+  transform: translate(-50%, -50%);    
+  width: 20%;
+}
+
+/* .color1 {color: #20b7d8;}
+.color2 {color: #f6a4eb;}
+.color3 {color: #f6acc0;}
+.color4 {color: #f4e28e;}
+.color5 {color: #eeefb4;} */
