@@ -6,6 +6,8 @@ export const LOGIN = 'LOGIN';
 export const QUESTION_SCORE = 'QUESTION_SCORE';
 
 export const FETCH_QUESTIONS = 'FETCH_QUESTIONS';
+export const CLEAR_QUESTIONS = 'CLEAR_QUESTIONS';
+
 
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES';
 export const FETCH_CATEGORIES_ERROR = 'FETCH_CATEGORIES_ERROR';
@@ -35,6 +37,11 @@ export function fetchTokenFailureAction(error) {
 export const questionsSuccessAction = (questions) => ({
   type: FETCH_QUESTIONS,
   questions,
+});
+
+// quando o jogador vem da tela de config não estava buscando novas perguntas na segunda vez que jogava com perguntas da mesma categoria, pois fiz uma validação com o tamanho do array de perguntas para resolver outro bug, que era vir com as perguntas de uma categoria específica e quando chegava na tela de game, eram sobrescritas pois fazia novo fetch.
+export const clearQuestionsAction = () => ({
+  type: CLEAR_QUESTIONS,
 });
 
 export const categoriesSuccessAction = (categories) => ({

@@ -1,5 +1,6 @@
 import {
   FETCH_QUESTIONS,
+  CLEAR_QUESTIONS,
 } from '../actions';
 
 const initialState = {
@@ -12,6 +13,10 @@ function questionsReducer(state = initialState, action) {
     return {
       ...state,
       questions: action.questions,
+    };
+  case CLEAR_QUESTIONS:
+    return {
+      questions: [],
     };
   default:
     return state;
