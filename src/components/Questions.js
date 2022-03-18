@@ -193,6 +193,7 @@ class Questions extends Component {
 
   render() {
     const { questions } = this.props;
+    // console.log(questions);
     const { questionIndex, disableNextBtn, shuffledAnswers, seconds } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];

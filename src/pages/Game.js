@@ -39,7 +39,7 @@ class Game extends Component {
 
   render() {
     const { questions } = this.state;
-    console.log(questions);
+    // console.log(questions);
     return (
       <div>
         <h1>Game</h1>
