@@ -1,4 +1,4 @@
-import { LOGIN, QUESTION_SCORE } from '../actions';
+import { LOGIN, QUESTION_SCORE, CLEAR_SCORE } from '../actions';
 
 const initialState = {
   playerName: '',
@@ -22,6 +22,11 @@ function playerReducer(state = initialState, action) {
       ...state,
       assertions: state.assertions + 1,
       score: state.score + action.answerScore,
+    };
+  case CLEAR_SCORE:
+    return {
+      ...state,
+      score: 0,
     };
   default:
     return state;

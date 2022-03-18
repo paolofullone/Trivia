@@ -12,13 +12,19 @@ class Game extends Component {
   state = ({ questions: '' })
 
   componentDidMount = async () => {
-    const { token, fetchQuestions } = this.props;
-    const results = await getQuestions(token);
-    if (results.length) {
-      fetchQuestions(results);
-      return this.setState({ questions: results });
+    const { token, fetchQuestions, questions } = this.props;
+    // caso já chegue aqui com perguntas, é porque veio da tela de config, portanto não deve fazer outro fetch usando a getQuestions e...
+    if (!questions.length) {
+      const results = await getQuestions(token);
+      if (results.length) {
+        fetchQuestions(results);
+        return this.setState({ questions: results });
+      }
+      this.getQuestionsAgain();
+    } else {
+      // vem direto para esse else recuperando as questões das props e setando o estado local com as questões que vieram das props
+      this.setState({ questions });
     }
-    this.getQuestionsAgain();
   }
   // componente separado para o timer
 
@@ -65,6 +71,9 @@ const mapDispatchToProps = (dispatch) => ({
   fetchQuestions: (questions) => dispatch(questionsSuccessAction(questions)),
 });
 
-const mapStateToProps = ({ token }) => ({ token });
+const mapStateToProps = (state) => ({
+  token: state.token.token,
+  questions: state.question.questions,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game);

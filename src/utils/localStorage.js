@@ -47,3 +47,9 @@ export {
   savePlayers,
   addLocalStoragePlayersRanking,
 };
+
+// verificar a pontuação questão por questão e se for maior que os scores do ranking mostrar "new record"
+// array.sort(function(a, b) {
+//   return a - b;
+// });
+// largest = array[array.length - 1];

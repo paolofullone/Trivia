@@ -4,11 +4,11 @@ const GET_CAT_API = 'https://opentdb.com/api_category.php';
 
 const getCategories = async () => {
   const response = await fetch(GET_CAT_API);
-  console.log(response);
-  const { results } = await response.json();
-  console.log(results);
+  // console.log(response);
+  const { trivia_categories: categories } = await response.json();
+  // console.log(categories);
 
-  return results;
+  return categories;
 };
 
 export default getCategories;

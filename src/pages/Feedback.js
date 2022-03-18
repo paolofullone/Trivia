@@ -16,6 +16,11 @@ class Feedback extends Component {
     history.push('/ranking');
   }
 
+  handleClickConfig = () => {
+    const { history } = this.props;
+    history.push('/config');
+  }
+
   render() {
     const { assertions, score } = this.props;
     return (
@@ -54,6 +59,12 @@ class Feedback extends Component {
           onClick={ this.handleClickRanking }
         >
           Ranking
+        </button>
+        <button
+          type="button"
+          onClick={ this.handleClickConfig }
+        >
+          Configurações
         </button>
       </div>
     );
