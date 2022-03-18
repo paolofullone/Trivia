@@ -6,6 +6,7 @@ import Questions from '../components/Questions';
 import getQuestions from '../services/GetQuestions';
 import getToken from '../services/GetToken';
 import { questionsSuccessAction } from '../redux/actions';
+import './Game.css';
 
 class Game extends Component {
   state = ({ questions: '' })
@@ -36,14 +37,19 @@ class Game extends Component {
     // console.log(questions);
     return (
       <div>
-        <h1>Game</h1>
+        <h1 className="game-title">Game</h1>
         {questions && (
           <section>
             <Header />
-            <Questions { ...this.props } />
+            <div className="game-screen-container">
+              <Questions { ...this.props } />
+            </div>
           </section>
         )}
-
+        <div>
+          <img src="https://i.imgur.com/e2lVtD4.png" alt="imagem do pink" className="game-screen-image1" />
+          <img src="https://i.imgur.com/uqTfRDO.png" alt="imagem do cérebro" className="game-screen-image2" />
+        </div>
       </div>
     );
   }

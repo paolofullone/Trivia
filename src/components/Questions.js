@@ -194,27 +194,26 @@ class Questions extends Component {
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
     return (
-      <div>
-        Game
-        <div>
-          <section>
-            <p data-testid="question-text" key={ Math.random() }>{question}</p>
-            <p data-testid="question-category" key={ Math.random() }>{category}</p>
-          </section>
-          <div data-testid="answer-options">
-            {shuffledAnswers}
-          </div>
-          <p>{seconds}</p>
-          <button
-            key={ Math.random() }
-            hidden={ disableNextBtn }
-            data-testid="btn-next"
-            type="button"
-            onClick={ this.handleClickNext }
-          >
-            Next
-          </button>
+      <div className="game-container">
+        <section className="question-container">
+          <h3 data-testid="question-text" key={ Math.random() }>{question}</h3>
+          <p data-testid="question-category" key={ Math.random() }>{category}</p>
+        </section>
+        <div data-testid="answer-options" className="answer-options">
+          {shuffledAnswers}
         </div>
+        <div className="timer-container">
+          <h4>{seconds}</h4>
+        </div>
+        <button
+          key={ Math.random() }
+          hidden={ disableNextBtn }
+          data-testid="btn-next"
+          type="button"
+          onClick={ this.handleClickNext }
+        >
+          Next
+        </button>
       </div>
     );
   }
