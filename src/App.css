@@ -20,19 +20,19 @@ body, html {
 }
 
 .red-border {
-  border: 3px solid red;
+  border: 50px solid red;
 }
 
 .green-border {
   border: 3px solid rgb(6, 240, 15);
 }
 
-@media ( prefers-reduced-motion : no-preference ) {
+/* @media ( prefers-reduced-motion : no-preference ) {
 
   .App-logo {
     animation: shake infinite 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
-}
+} */
 
 .App-header {
   align-items: center;
@@ -86,6 +86,7 @@ label {
 
 .login-btn {
   text-align: center;
+  width: 90%;
 }
 
 #container {
@@ -98,7 +99,7 @@ align-items: center;
 
 /* From cssbuttons.io by @adamgiebl */
 .card {
- width: 15vw;
+ width: 30vw;
  height: 20vw;
  background: linear-gradient(145deg, #2B86C5 0%, #FF3CAC 100%);
  border-radius: 5px;
@@ -120,7 +121,7 @@ align-items: center;
 
  button {
    margin-top: 1rem;
-   width: 75%;
+   width: 90%;
  }
 
 /* From cssbuttons.io by @adamgiebl */

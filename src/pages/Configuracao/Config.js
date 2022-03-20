@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import getCategories from '../services/GetCategories';
-import getQuestionsAndCat from '../services/GetQuestionsCategory';
-import { questionsSuccessAction, clearScoreAction } from '../redux/actions';
-import { readPlayer, savePlayer } from '../utils/localStorage';
+import getCategories from '../../services/GetCategories';
+import getQuestionsAndCat from '../../services/GetQuestionsCategory';
+import { questionsSuccessAction, clearScoreAction } from '../../redux/actions';
+import { readPlayer, savePlayer } from '../../utils/localStorage';
+import './Config.css';
 
 class Config extends Component {
   state = {
@@ -45,7 +46,7 @@ class Config extends Component {
     const { fetchQuestions, history, clearScoreDispatch } = this.props;
     const player = { ...readPlayer() };
     player[0].score = 0;
-    console.log(player);
+    // console.log(player);
     savePlayer(player);
     clearScoreDispatch();
     const { selectedCat, selectedDifficulty, selectedType } = this.state;
@@ -57,10 +58,12 @@ class Config extends Component {
   render() {
     const { localCat, selectedType, selectedDifficulty, selectedCat } = this.state;
     return (
-      <div>
-        <h1 data-testid="settings-title">Config</h1>
+      <div className="config">
+        <div>
+          <h1 data-testid="settings-title">Configurações</h1>
+        </div>
         <hr />
-        <p>Categorias</p>
+        <p>Categorias:</p>
         {localCat.length > 1 && (
           <select onChange={ this.onChangeCat } value={ selectedCat }>
             {localCat.map(({ id, name }) => (
@@ -78,13 +81,17 @@ class Config extends Component {
           <option value="hard" label="Hard" />
         </select>
         <hr />
-        <p>Tipos de perguntas</p>
+        <p>Tipos de perguntas:</p>
         <select onChange={ this.onChangeType } value={ selectedType }>
           <option value="" label="Select" />
           <option value="boolean" label="True/False" />
           <option value="multiple" label="Multiple Choices" />
         </select>
         <button type="button" onClick={ this.playBtn }>Play</button>
+        <div>
+          <img src="https://i.imgur.com/e2lVtD4.png" alt="imagem do pink" className="game-screen-image1" />
+          <img src="https://i.imgur.com/uqTfRDO.png" alt="imagem do cérebro" className="game-screen-image2" />
+        </div>
       </div>
     );
   }

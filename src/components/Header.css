@@ -17,7 +17,7 @@ header {
   margin: 0.3em 0.3em;
   padding: 0.5em 0.5em;
   border-radius: 0.1em;
-  background: #e8e8e8;
+  background-image: linear-gradient(to bottom right, #5237e9, #eb74d1);
   border: 1px solid #e8e8e8;
   box-shadow: 2px 2px 3px #b6b6b6,
               -1px -1px 3px #ffffff;

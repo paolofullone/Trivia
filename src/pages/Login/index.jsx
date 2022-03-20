@@ -7,6 +7,7 @@ import { addLocalStoragePlayer } from '../../utils/localStorage';
 import Card from '../../components/Card';
 import '../../App.css';
 import './index.css';
+import Logo from '../../images/triviagame.png';
 
 class Login extends Component {
 state={
@@ -104,6 +105,9 @@ state={
         </div>
         <div>
           <img className="login-screen-image" src="https://imgur.com/LWKPCdr.png" alt="imagem do pink e cérebro" />
+        </div>
+        <div>
+          <img className="logo-trivia" src={ Logo } alt="logo-trivia" />
         </div>
       </div>
     );

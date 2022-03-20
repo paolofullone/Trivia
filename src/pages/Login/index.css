@@ -1,18 +1,27 @@
 body {
-    background-image: linear-gradient(to bottom right, #f6acc0, #eeefb4);
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    /* height: 100%; */
-    /* font-family: sans-serif; */
+  background-color: black;
+  /* background-image: linear-gradient(to bottom right, #f6acc0, #eeefb4); */
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  /* height: 100%; */
+  /* font-family: sans-serif; */
 }
 
 .login-screen-image {
- position: absolute;
-  left: 85%;
-  top: 80%;
-  transform: translate(-50%, -50%);    
-  width: 20%;
+position: absolute;
+left: 85%;
+top: 50%;
+transform: translate(-50%, -50%);    
+width: 30%;
+}
+
+.logo-trivia {
+position: absolute;
+left: 18%;
+top: 50%;
+transform: translate(-50%, -50%);    
+width: 30%;
 }
 
 /* .color1 {color: #20b7d8;}
