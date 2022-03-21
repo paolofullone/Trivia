@@ -25,16 +25,17 @@ class Feedback extends Component {
   render() {
     const { assertions, score } = this.props;
     return (
-      <div>
-        <div className="feedback">
-          <h2>Feedback</h2>
+      <div className="container-feedback">
+        <div>
+          <div>
+            <h1>FEEDBACK</h1>
+          </div>
           <HeaderFeedback />
-          <p data-testid="feedback-text">mensagem de feedback</p>
+          {/* <p data-testid="feedback-text">mensagem de feedback</p> */}
           <p data-testid="feedback-text">
-            {assertions < MINIMUM_ASSERTIONS ? 'Could be better...' : 'Well Done!'}
-          </p>
-          <p>
             O placar final foi:
+            {assertions
+          < MINIMUM_ASSERTIONS ? 'Could be better...' : 'Well Done!'}
           </p>
           <p data-testid="feedback-total-score">{score}</p>
           <p>
@@ -46,6 +47,7 @@ class Feedback extends Component {
           type="button"
           data-testid="btn-go-home"
           onClick={ this.handleClickHome }
+          className="feedback"
         >
           Home
         </button>
@@ -53,10 +55,12 @@ class Feedback extends Component {
           type="button"
           data-testid="btn-play-again"
           onClick={ this.handleClickHome }
+          className="feedback"
         >
           Play Again
         </button>
         <button
+          className="feedback"
           type="button"
           data-testid="btn-ranking"
           onClick={ this.handleClickRanking }
@@ -64,6 +68,7 @@ class Feedback extends Component {
           Ranking
         </button>
         <button
+          className="feedback"
           type="button"
           onClick={ this.handleClickConfig }
         >
