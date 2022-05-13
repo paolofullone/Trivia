@@ -5,7 +5,7 @@ import {
   addLocalStoragePlayer,
   addLocalStoragePlayersRanking,
 } from '../utils/localStorage';
-import { scoreAction } from '../redux/actions';
+import { scoreAction, clearQuestionsAction } from '../redux/actions';
 import './Questions.css';
 
 const ONE_SECOND = 1000;
@@ -68,12 +68,15 @@ class Questions extends Component {
 
   handleClickNext = async () => {
     const { questionIndex, disableAnswerBtn } = this.state;
+    const { clearQuestions } = this.props;
     const TOTAL_QUESTIONS = 4;
     if (questionIndex < TOTAL_QUESTIONS) {
       this.setState({ questionIndex: questionIndex + 1 });
     } else {
       const { history } = this.props;
       this.savePlayerLocalStorageRanking();
+      // tem que resetar as questões aqui para um array vazio devido a lógica de quando vier preenchido não fazer o fetch que usei para a página de config
+      clearQuestions();
       history.push('/feedback');
     }
     // na ultima pergunta não entra nesse setState.
@@ -190,31 +193,31 @@ class Questions extends Component {
 
   render() {
     const { questions } = this.props;
+    // console.log(questions);
     const { questionIndex, disableNextBtn, shuffledAnswers, seconds } = this.state;
     if (!questions.length) return <p>loading</p>;
     const { category, question } = questions[questionIndex];
     return (
-      <div>
-        Game
-        <div>
-          <section>
-            <p data-testid="question-text" key={ Math.random() }>{question}</p>
-            <p data-testid="question-category" key={ Math.random() }>{category}</p>
-          </section>
-          <div data-testid="answer-options">
-            {shuffledAnswers}
-          </div>
-          <p>{seconds}</p>
-          <button
-            key={ Math.random() }
-            hidden={ disableNextBtn }
-            data-testid="btn-next"
-            type="button"
-            onClick={ this.handleClickNext }
-          >
-            Next
-          </button>
+      <div className="game-container">
+        <section className="question-container">
+          <h3 data-testid="question-text" key={ Math.random() }>{question}</h3>
+          <p data-testid="question-category" key={ Math.random() }>{category}</p>
+        </section>
+        <div data-testid="answer-options" className="answer-options">
+          {shuffledAnswers}
         </div>
+        <div className="timer-container">
+          <h4>{seconds}</h4>
+        </div>
+        <button
+          key={ Math.random() }
+          hidden={ disableNextBtn }
+          data-testid="btn-next"
+          type="button"
+          onClick={ this.handleClickNext }
+        >
+          Next
+        </button>
       </div>
     );
   }
@@ -242,6 +245,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   scoreDispatch: (payload) => dispatch(scoreAction(payload)),
+  clearQuestions: () => dispatch(clearQuestionsAction()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions);

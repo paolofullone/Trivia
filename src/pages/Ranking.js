@@ -10,8 +10,8 @@ export default class Ranking extends Component {
 
   render() {
     const players = readPlayers();
-    console.log(players[0].image);
-    console.log(players.sort((a, b) => b.score - a.score));
+    // console.log(players[0].image);
+    // console.log(players.sort((a, b) => b.score - a.score));
     return (
       <div>
         {players.sort((a, b) => b.score - a.score)

@@ -227,3 +227,107 @@ ranking ordenando pela pontuação
 ]
 como fazer o sort de objeto?
 Verificar qual Hof para a renderização
+
+
+// CSS
+Card
+https://cssbuttons.io/detail/adamgiebl/blue-mole-92
+Botão
+https://cssbuttons.io/detail/adamgiebl/soft-gecko-85
+
+.color1 {color: #20b7d8;}
+.color2 {color: #f6a4eb;}
+.color3 {color: #f6acc0;}
+.color4 {color: #f4e28e;}
+.color5 {color: #eeefb4;}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+Input
+https://codepen.io/lucasyem/pen/ZEEYKdj
+
+<div class="form__group field">
+  <input type="input" class="form__field" placeholder="Name" name="name" id='name' required />
+  <label for="name" class="form__label">Name</label>
+</div>
+
+<div class="form__group field">
+  <input type="input" class="form__field" placeholder="Email" name="email" id='email' required />
+  <label for="name" class="form__label">E-mail</label>
+</div>
+
+
+// CSS Modificado do Input com cores customizadas
+$primary: #20b7d8;
+$secondary: #f6a4eb;
+$white: #fff;
+$gray: #20b7d8;
+.form__group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 20%;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .form__label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+  }
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: $gray;
+}
+
+.form__field:focus {
+  ~ .form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: $primary;
+    font-weight:700;    
+  }
+  padding-bottom: 6px;  
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $primary,$secondary);
+  border-image-slice: 1;
+}
+/* reset input */
+.form__field{
+  &:required,&:invalid { box-shadow:none; }
+}
+/* demo */
+body {
+  font-family: 'Poppins', sans-serif; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.5rem;
+  background-color:#222222;
+}
